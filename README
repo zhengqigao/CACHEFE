@@ -1,0 +1,34 @@
+This tool is designed for  estimating SRAM failure rate.
+
+【Instruction】 
+
+Currently, the tool supports modeling three kinds of SRAM Failure Rate: Read Failure, Write failure, Sense Amplifier Failure. For more details about the failure , please refer to:
+
+[1] Mukhopadhyay S, Mahmoodi H, Roy K. Modeling of failure probability and statistical design of SRAM array for yield enhancement in nanoscaled CMOS[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2005, 24(12):1859-1880.
+
+Basically, MOSFET failure rate is so small (10^-6) that Monte Carlo method would be costly (10^8~10^9 simulations required), So here we use algorithm described in :
+
+[2] Yu H, Tao J, Liao C, et al. Efficient statistical analysis for correlated rare failure events via Asymptotic Probability Approximation[C]// Ieee/acm International Conference on Computer-Aided Design. IEEE, 2017:18.
+
+【Prerequest】
+
+Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
+
+【Install】
+
+1. Change directory to the path where your unzipped file. (Command ---> cd "your path")
+2. Compile the source code. (Command ---> make)
+3. Run the programm. (Command ---> ./APA)
+
+【Usage】
+
+ ./APA [-a arguement] [-c argument] [-k argument]
+
+[-a argument]: represents the algorithm used to calculate SRAM Failure Rate, the argument must be one of "APA", "APE", default is APA.
+
+[-c argument]: represents the cell number on a sense amplifier, the argument must be a positive integer, default is 64.
+
+[-k argument]: represents the kind of the failure,the argument must be one of "read","write","SA","All",default is "All".
+
+
+
