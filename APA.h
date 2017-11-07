@@ -13,6 +13,7 @@ public:
 	vector<double> APA_probEstList;
 	vector<double> APA_probCILowList;
 	vector<double> APA_probCIUpList;
+	vector<int> APA_simtotalList;
 	int nCend;
 	double u01[2];
 	double sig01[2];
@@ -25,7 +26,7 @@ private:
 	bool sim_SA_fake(vector<vector<double> >&Xsa, vector<double>&Res_ylimit,int simtype);
 	bool simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype);
 	bool simX(vector<vector<double> > &src, vector<vector<double> >&dst, int index,int simtype);
-	bool output(vector<double>probList, vector<double>sigList);
+	bool output(vector<double>probList, vector<double>sigList,int &nSimTotal);
 	bool getspec(vector<double> Y1, vector<double> Y2, double probtarget, vector<double> &perdeltaCur);
 	bool filterX(vector<vector<vector<double> > > &X, vector<vector<vector<double> > >&Y, vector<vector<vector<double> > >&Y1, vector<vector<vector<double> > >&Y2, vector<vector<vector<double> > >&Xsa, vector<vector<vector<double> > >&ylim, vector<double>&probList, vector<double>&sigList, vector<vector<double> >&perfDeltaList, int &nSimTotal, int nSimiter, vector<vector<double> > &XSeed, vector<vector<double> > &YSeed, vector<double>&Y1Seed, vector<double>&Y2Seed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int &eop,int simtype);
 	bool expandSeed(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int & nSimTotal, int nSimiter, vector<vector<double> >&Res_XSeed, vector<vector<double> >&Res_YSeed, vector<vector<double> >&Res_Xsa, vector<vector<double> >&Res_ylim, vector<vector<vector<double> > >&Xcell, vector<vector<vector<double> > >&Ycell,int simtype);

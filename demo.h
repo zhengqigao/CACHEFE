@@ -4,9 +4,7 @@
 #include"APA.h"
 
 namespace demo{
-	bool writefail();
-	bool readfail();
-	bool safail();
+	bool rundemo(int simtype,int par_nsimiter=2000);
 	bool cleardemo();
 }
 

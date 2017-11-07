@@ -7,11 +7,10 @@ int main(int argc,char *argv[]) {
 	// Yu can uncomment the lines below to see demo results. The following lines will create a new directory ./CACHEFE_res/ 
 	// And it will put the demo results in the directory.
 
-	//demo::writefail();
 	//cout<<"finish write"<<endl;
-	//demo::readfail();
+	//demo::rundemo(READFAIL_);
 	//cout<<"finish read"<<endl;
-	//demo::safail();
+	//demo::rundemo(SAFAIL_);
 	//cout<<"finish sa"<<endl<<endl;
 	//exit(1);
 	
@@ -58,10 +57,10 @@ int main(int argc,char *argv[]) {
 				cur="Read";
 				break;
 			case WRITEFAIL_:
-				cur="write";
+				cur="Write";
 				break;
 			case SAFAIL_:
-				cur="sense amplifier";
+				cur="Sense Amplifier";
 				break;
 			default:
 				cout<<"[Error]:wrong simulatinon type for CACHFE\n";
@@ -90,7 +89,9 @@ int main(int argc,char *argv[]) {
 		double prob = 1;
 		vector<double>probAnd(SUS_instance.nCend);
 		vector<double> Fp(par_nCend);// very order estimation results, may be negative
+		int totalsim=0;
 		for (int j = 1; j <= par_nCend; j++) {
+			totalsim+=SUS_instance.APA_simtotalList[j-1];
 			prob *= SUS_instance.APA_probEstList[j - 1];
 			probAnd[j - 1] = prob;
 			// APA result
@@ -107,10 +108,11 @@ int main(int argc,char *argv[]) {
 				upperbound = (upperbound>Fp[i]?upperbound:Fp[i]);
 				res.push_back(Fp[i]);
 				cur++;
-				cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
+				//cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
 			}
 		}
-		//cout<<endl<<"\t"<<cur<<" Failure Rate Result: "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
+		cout<<endl<<"\t"<<cur<<" Failure Rate : "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
+		cout<<"\tTotal Simulation Times : "<<totalsim<<endl;
 		cout << endl;
 	
 	}

@@ -106,8 +106,8 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		perfDeltaList.push_back(perfDeltaCur);
 		probList.push_back(probCur);
 		sigList.push_back(sigCur);
-		cout << "\tFinish " << nC + 1 << "th order APA......\n";
-		output(probList, sigList);
+		cout << "\tFinish " << nC + 1 << "th order APA......current order simulation times : "<<nSimTotal<<endl;
+		output(probList, sigList,nSimTotal);
 		if (nC + 1 < nCend) {
 			//next APA order
 			helperfunc::delete_ref(X, indParamFail, 2);
@@ -483,8 +483,8 @@ bool SUS::filterX(vector<vector<vector<double> > > &X, vector<vector<vector<doub
 	sigList.push_back(sigCur);
 	perfDeltaList.push_back(perfDeltaCur);
 	if (Res_eop == 1) {
-		cout << "\tFinish " << Res_YSeed.size() << "th order APA......\n";
-		output(probList, sigList);
+		cout << "\tFinish " << Res_YSeed.size() << "th order APA......current order simulation times : "<<nSimTotal<<endl;
+		output(probList, sigList,nSimTotal);
 		if (Res_YSeed.size() < nCend) {
 			sus_delta_sim(Res_XSeed, Res_YSeed, Res_XsaSeed, Res_ylimSeed,simtype);
 		}
@@ -695,7 +695,7 @@ bool SUS::getspec(vector<double> Y1, vector<double> Y2, double probTarget, vecto
 }
 
 
-bool SUS::output(vector<double>probList, vector<double>sigList) {
+bool SUS::output(vector<double>probList, vector<double>sigList,int &nSimTotal) {
 	double probEst = 1;
 	//string tmp; tmp = "problist"; display_matrix_vector(probList, tmp);
 	int length = probList.size();
@@ -726,6 +726,7 @@ bool SUS::output(vector<double>probList, vector<double>sigList) {
 	APA_probCILowList.push_back(probCILow);
 	APA_probCIUpList.push_back(probCIUp);
 	APA_probEstList.push_back(probEst);
+	APA_simtotalList.push_back(nSimTotal);
 	return 1;
 }
 
