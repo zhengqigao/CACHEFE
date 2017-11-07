@@ -1,4 +1,4 @@
-This tool is designed for  estimating SRAM failure rate.
+This tool "CACHEFE" is designed for estimating SRAM failure rate.
 
 【Instruction】 
 
@@ -22,13 +22,29 @@ Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
 
 【Usage】
 
- ./APA [-a arguement] [-c argument] [-k argument]
-
-[-a argument]: represents the algorithm used to calculate SRAM Failure Rate, the argument must be one of "APA", "APE", default is APA.
-
-[-c argument]: represents the cell number on a sense amplifier, the argument must be a positive integer, default is 64.
-
-[-k argument]: represents the kind of the failure,the argument must be one of "read","write","SA","All",default is "All".
+ ./APA -C (--Cell) argument [-A (--Algo) arguement]  [-T (--Type) argument]
 
 
+[-C (--Cell) argument]: represents the cell number, the argument must be a positive integer and must be given.
 
+[-A (--Algo) argument]: represents the algorithm used to calculate SRAM Failure Rate, the argument must be one of "APA", "APE", default is "APA".
+
+[-T (--Type) argument]: represents the type of the failure,the argument must be one of"all","read","write","sa", default is "all".
+
+
+
+【Example】
+
+./APA --Cell 64  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
+
+./APA -C 32 -T read : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
+
+
+【Acknowledgement】
+
+1. Thanks to Github contributor with cmdline parser, you can find it here: https://github.com/tanakh/cmdline 
+
+
+【Supports】
+
+If you have any questions related to this tool, please feel free to contact with me: 14307130100@fudan.edu.cn
