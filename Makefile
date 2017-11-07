@@ -3,8 +3,7 @@
 # 1. Use g++ to compile
 # 2. Link libraray Eign to solve linear equations
 # 3. Compile under c++11 standard
-# 4. After compling, all the *.o files will be located in ./obj
-# 5. After compling, the executable file be located in ./
+# 4. After compling, the executable file be located in ./
 
 TARGET = CACHEFE	
 
@@ -19,6 +18,7 @@ OBJS = $(addsuffix .o, $(addprefix $(OBJDIR)/,$(BASE)))
 
 all: $(TARGET)
 	@echo "Finish compiling..."
+	@ rm -rf ${OBJDIR}
 $(OBJS): | $(OBJDIR)
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
@@ -30,4 +30,4 @@ $(OBJDIR)/%.o:%.cpp
 	@${CC} ${FLAGS} -c -o $@ $<
 	@echo "Compiling $<......"
 clean:
-	@rm -r $(OBJDIR) $(TARGET)
+	@rm -rf $(OBJDIR) $(TARGET)
