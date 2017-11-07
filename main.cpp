@@ -3,18 +3,23 @@
 int APAdemo();
 
 int main(int argc,char *argv[]) {
+	// parse Input 
 	cmdline::parser Myparser;
 	Myparser.add<string>("Algo",'A',"Algorithm used by CACHEFE",false,"APA",cmdline::oneof<string>("APA","APE"));
-	Myparser.add<string>("Type",'T',"Failure Type simulated by CACHEFE",false,"All",cmdline::oneof<string>("all","read","write","sa"));
+	Myparser.add<string>("Type",'T',"Failure Type simulated by CACHEFE",false,"all");
 	Myparser.add<int>("Cell",'C',"cell number of SRAM simulated by CACHEFE",true,0,cmdline::range(1, 65));
 	Myparser.parse_check(argc, argv);
+	
 	string Algo = Myparser.get<string>("Algo");
 	string simtype = Myparser.get<string>("Type");
+	transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower); 
 	int Cellnum = Myparser.get<int>("Cell");
 	std::vector<int> Simtypelist;
-	
+	if (simtype != "all" && simtype !="read" && simtype != "write" && simtype !="sa"){
+		cout<<"[Error]: Simulation type is wrong, must bt one of ['all','read','write','sa']"<<endl;
+		exit(1);
+	}
 
-	transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower);  
 	if (simtype=="all" || simtype=="read"){
 		Simtypelist.push_back(READFAIL_);
 	}
@@ -24,6 +29,8 @@ int main(int argc,char *argv[]) {
 	if (simtype=="all" || simtype=="sa"){
 		Simtypelist.push_back(SAFAIL_);
 	}
+
+	//begin the main part of the tool
 
 	cout << "\n----------CACHEFE for SRAM Failure Rate Estimation ----------\n\n\n";
 
@@ -69,28 +76,29 @@ int main(int argc,char *argv[]) {
 		double prob = 1;
 		//string tmp; helperfunc::display_matrix_vector(SUS_instance.APA_probEstList, tmp);
 		vector<double>probAnd(SUS_instance.nCend);
-		vector<vector<double> >Fp(par_nCend, vector<double>(1));
+		vector<double> Fp(par_nCend);
 		for (int j = 1; j <= par_nCend; j++) {
 			prob *= SUS_instance.APA_probEstList[j - 1];
 			probAnd[j - 1] = prob;
 			// APA result
-			for (int m = 0; m < 1; m++) {
-				Fp[j - 1][m] = (Cellnum - j + 1)*pow(-1, j - 1)*probAnd[j - 1];
-			}
+			Fp[j - 1] = (Cellnum - j + 1)*pow(-1, j - 1)*probAnd[j - 1];
 			for (int k = 1; k <= j - 1; k++) {
-				for (int m = 0; m < Fp[0].size(); m++) {
-					Fp[j - 1][m] = Fp[j - 1][m] + pow(-1, k - 1)*probAnd[k - 1] * (helperfunc::combntns(j, k) + (Cellnum - j)*helperfunc::combntns(j - 1, k - 1));
-				}
+				Fp[j - 1] = Fp[j - 1] + pow(-1, k - 1)*probAnd[k - 1] * (helperfunc::combntns(j, k) + (Cellnum - j)*helperfunc::combntns(j - 1, k - 1));
 			}
 		}
-
+		/*
+		Fp(j,:)=(cells-j+1)*(-1)^(j-1)*probAnd(i,j);
+        for k=1:j-1
+            Fp(j,:)=Fp(j,:)+(-1)^(k-1)*probAnd(i,k)*(combntns(j,k)+(cells-j)*combntns(j-1,k-1));
+        end
+		*/
 		std::vector<double> res;
 		cout<<endl;
 		for (int i = 0, cur = 0; i<Fp.size(); i++) {
-			if (Fp[i][0]>0) {
-				res.push_back(Fp[i][0]);
+			if (Fp[i]>0) {
+				res.push_back(Fp[i]);
 				cur++;
-				cout << "APA order " << cur << "th Failure Rate Estimation Result: " << Fp[i][0] << endl;
+				cout << "APA order " << cur << "th Failure Rate Estimation Result: " << Fp[i] << endl;
 			}
 		}
 		cout << endl;
