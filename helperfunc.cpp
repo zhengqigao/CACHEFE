@@ -5,7 +5,7 @@ bool helperfunc::write_to_txt(vector<vector<double> >&Fp, const char *file) {
 	fp = fopen(file, "w+");
 	for (int i = 0; i < Fp.size(); i++) {
 		for (int j = 0; j < Fp[0].size(); j++) {
-			fprintf(fp, "%.12f", Fp[i][j]);
+			fprintf(fp, "%E", Fp[i][j]);
 			fprintf(fp, " ");
 		}
 		fprintf(fp, "\n");

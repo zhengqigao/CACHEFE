@@ -1,8 +1,20 @@
 #include"APA.h"
 #include"cmdline.h"
-int APAdemo();
+#include"demo.h"
 
 int main(int argc,char *argv[]) {
+	
+	// Yu can uncomment the lines below to see demo results. The following lines will create a new directory ./CACHEFE_res/ 
+	// And it will put the demo results in the directory.
+
+	//demo::writefail();
+	//cout<<"finish write"<<endl;
+	//demo::readfail();
+	//cout<<"finish read"<<endl;
+	//demo::safail();
+	//cout<<"finish sa"<<endl<<endl;
+
+
 	// parse Input 
 	cmdline::parser Myparser;
 	Myparser.add<string>("Algo",'A',"Algorithm used by CACHEFE",false,"APA",cmdline::oneof<string>("APA","APE"));
@@ -95,52 +107,14 @@ int main(int argc,char *argv[]) {
 				upperbound = (upperbound>Fp[i]?upperbound:Fp[i]);
 				res.push_back(Fp[i]);
 				cur++;
-				//cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
+				cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
 			}
 		}
-		cout<<endl<<"\t"<<cur<<" Failure Rate Result: "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
+		//cout<<endl<<"\t"<<cur<<" Failure Rate Result: "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
 		cout << endl;
 	
 	}
 	cout << "CACHEFE finish Failure Rate Estimation...Press any key to return...\n";
 	system("read");
-	return 1;
-}
-
-
-int APAdemo() {
-	// get parameters ready
-	double par_t_C = 1019.6867251526046;
-	int par_nCend = 8, par_randseed = 7, par_nsimiter = 10000;
-	double *par_u01 = new double[2], *par_sig01 = new double[2];
-	par_u01[0] = 0; par_u01[1] = INFINITY;
-	par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
-
-	// initialzation
-	SUS SUS_instance(par_nCend, par_u01, par_sig01, par_t_C, par_randseed, par_nsimiter);
-
-	// let's do simulation !
-	vector<vector<double> >XSeed, Yseed, XsaSeed, ylimSeed;
-	SUS_instance.sus_delta_sim(XSeed, Yseed, XsaSeed, ylimSeed,SAFAIL_);
-	vector<int>cells={1,2,3,4,5,6,7,8,10,13,16,32,48,64};
-	// get results
-	double prob = 1;
-	vector<double>probAnd(SUS_instance.nCend);
-	vector<vector<double> >Fp(par_nCend, vector<double>(cells.size()));
-	for (int j = 1; j <= par_nCend; j++) {
-		prob *= SUS_instance.APA_probEstList[j - 1];
-		probAnd[j - 1] = prob;
-		// APA result
-		for (int m = 0; m < cells.size(); m++) {
-			Fp[j - 1][m] = (cells[m] - j + 1)*pow(-1, j - 1)*probAnd[j - 1];
-		}
-		for (int k = 1; k <= j - 1; k++) {
-			for (int m = 0; m < Fp[0].size(); m++) {
-				Fp[j - 1][m] = Fp[j - 1][m] + pow(-1, k - 1)*probAnd[k - 1] * (helperfunc::combntns(j, k) + (cells[m] - j)*helperfunc::combntns(j - 1, k - 1));
-			
-			}
-		}
-	}
-	helperfunc::write_to_txt(Fp, "./APAdemo__res.txt");
 	return 1;
 }

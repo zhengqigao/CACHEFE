@@ -8,6 +8,14 @@ SUS::SUS(int par_nCend, double *par_u01, double *par_sig01, double par_t_C, int 
 	t_C = par_t_C;
 	randseed = par_randseed;
 	nSimiter = par_nSimiter;
+	/*
+	cout<<par_nCend<<endl;
+	cout<<par_u01[0]<<" "<<par_u01[1]<<endl;
+	cout<<par_sig01[0]<<" "<<par_sig01[1]<<endl;
+	cout<<par_t_C<<endl;
+	cout<<par_randseed<<endl;
+	cout<<par_nSmimiter<<endl;
+*/
 }
 
 SUS::~SUS() {};
