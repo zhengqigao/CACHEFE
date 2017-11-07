@@ -5,7 +5,7 @@ bool demo::safail(){
 	system("mkdir -p ./CACHEFE_res");
 	// get parameters ready
 	double par_t_C = 1019.6867251526046;
-	int par_nCend = 8, par_randseed = 7, par_nsimiter = 10000;
+	int par_nCend = 8, par_randseed = 7, par_nsimiter = 2000;
 	double *par_u01 = new double[2], *par_sig01 = new double[2];
 	par_u01[0] = 0; par_u01[1] = INFINITY;
 	par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
@@ -50,7 +50,7 @@ bool demo::readfail() {
 	system("mkdir -p ./CACHEFE_res");
 	// get parameters ready
 	double par_t_C = 1019.6867251526046;
-	int par_nCend = 8, par_randseed = 7, par_nsimiter = 10000;
+	int par_nCend = 8, par_randseed = 222, par_nsimiter = 2000;
 	double *par_u01 = new double[2], *par_sig01 = new double[2];
 	par_u01[0] = 0; par_u01[1] = INFINITY;
 	par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
@@ -91,7 +91,7 @@ bool demo::writefail(){
 	system("mkdir -p ./CACHEFE_res");
 	// get parameters ready
 	double par_t_C = 1019.6867251526046;
-	int par_nCend = 8, par_randseed = 7, par_nsimiter = 10000;
+	int par_nCend = 8, par_randseed = 222, par_nsimiter = 2000;
 	double *par_u01 = new double[2], *par_sig01 = new double[2];
 	par_u01[0] = 0; par_u01[1] = INFINITY;
 	par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
