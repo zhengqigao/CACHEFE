@@ -98,7 +98,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		perfDeltaList.push_back(perfDeltaCur);
 		probList.push_back(probCur);
 		sigList.push_back(sigCur);
-		cout << "Finish " << nC + 1 << "th order APA......\n";
+		cout << "\tFinish " << nC + 1 << "th order APA......\n";
 		output(probList, sigList);
 		if (nC + 1 < nCend) {
 			//next APA order
@@ -475,7 +475,7 @@ bool SUS::filterX(vector<vector<vector<double> > > &X, vector<vector<vector<doub
 	sigList.push_back(sigCur);
 	perfDeltaList.push_back(perfDeltaCur);
 	if (Res_eop == 1) {
-		cout << "Finish " << Res_YSeed.size() << "th order APA......\n";
+		cout << "\tFinish " << Res_YSeed.size() << "th order APA......\n";
 		output(probList, sigList);
 		if (Res_YSeed.size() < nCend) {
 			sus_delta_sim(Res_XSeed, Res_YSeed, Res_XsaSeed, Res_ylimSeed,simtype);

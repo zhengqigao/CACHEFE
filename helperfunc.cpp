@@ -28,6 +28,7 @@ bool helperfunc::write_to_txt(vector<double> &Fp, const char *file) {
 	return 1;
 }
 
+
 int helperfunc::combntns(int maxx, int minn) {
 	minn = minn > maxx - minn ? maxx - minn : minn;
 	int res = 1;

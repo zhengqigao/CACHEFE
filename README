@@ -22,7 +22,7 @@ Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
 
 【Usage】
 
- ./APA -C (--Cell) argument [-A (--Algo) arguement]  [-T (--Type) argument]
+ ./CACHEFE -C (--Cell) argument [-A (--Algo) arguement]  [-T (--Type) argument]
 
 
 [-C (--Cell) argument]: represents the cell number, the argument must be a positive integer and must be given.
@@ -35,9 +35,9 @@ Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
 
 【Example】
 
-./APA --Cell 64  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
+./CACHEFE --Cell 64  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
 
-./APA -C 32 -T read : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
+./CACHEFE -C 32 -T read : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
 
 
 【Acknowledgement】

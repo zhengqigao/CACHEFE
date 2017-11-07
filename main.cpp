@@ -34,17 +34,8 @@ int main(int argc,char *argv[]) {
 
 	cout << "\n----------CACHEFE for SRAM Failure Rate Estimation ----------\n\n\n";
 
+	//begin simulating very type of failure
 	for (int i=0;i<Simtypelist.size();i++){
-		// get parameters ready
-		double par_t_C = 1019.6867251526046;
-		int par_nCend = 8, par_randseed = 7, par_nsimiter = 1000;
-		double *par_u01 = new double[2], *par_sig01 = new double[2];
-		par_u01[0] = 0; par_u01[1] = INFINITY;
-		par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
-
-		// initialzation
-		SUS SUS_instance(par_nCend, par_u01, par_sig01, par_t_C, par_randseed, par_nsimiter);
-
 		// let's do simulation !
 		vector<vector<double> >XSeed, Yseed, XsaSeed, ylimSeed;
 
@@ -66,17 +57,27 @@ int main(int argc,char *argv[]) {
 		}
 
 		string wrk1_pre="\nSRAM 【";
-		string wrk1_post=" Failure Rate】 Estimation...... \n\n";
+		string wrk1_post=" Failure Rate】 Estimation :  \n\n";
 		wrk1_pre.append(cur);
 		wrk1_pre.append(wrk1_post);
 		cout << wrk1_pre;
 
+		// get parameters ready
+		double par_t_C = 1019.6867251526046;
+		int par_nCend = 8, par_randseed = 7, par_nsimiter = 1000;
+		double *par_u01 = new double[2], *par_sig01 = new double[2];
+		par_u01[0] = 0; par_u01[1] = INFINITY;
+		par_sig01[0] = 2.451733398437500e-05; par_sig01[1] = 2.451733398437500e-05;
+
+		// initialzation
+		SUS SUS_instance(par_nCend, par_u01, par_sig01, par_t_C, par_randseed, par_nsimiter);
+
+
 		SUS_instance.sus_delta_sim(XSeed, Yseed, XsaSeed, ylimSeed,Simtypelist[i]);
 		// get results
 		double prob = 1;
-		//string tmp; helperfunc::display_matrix_vector(SUS_instance.APA_probEstList, tmp);
 		vector<double>probAnd(SUS_instance.nCend);
-		vector<double> Fp(par_nCend);
+		vector<double> Fp(par_nCend);// very order estimation results, may be negative
 		for (int j = 1; j <= par_nCend; j++) {
 			prob *= SUS_instance.APA_probEstList[j - 1];
 			probAnd[j - 1] = prob;
@@ -86,28 +87,20 @@ int main(int argc,char *argv[]) {
 				Fp[j - 1] = Fp[j - 1] + pow(-1, k - 1)*probAnd[k - 1] * (helperfunc::combntns(j, k) + (Cellnum - j)*helperfunc::combntns(j - 1, k - 1));
 			}
 		}
-		/*
-		Fp(j,:)=(cells-j+1)*(-1)^(j-1)*probAnd(i,j);
-        for k=1:j-1
-            Fp(j,:)=Fp(j,:)+(-1)^(k-1)*probAnd(i,k)*(combntns(j,k)+(cells-j)*combntns(j-1,k-1));
-        end
-		*/
 		std::vector<double> res;
-		cout<<endl;
-		for (int i = 0, cur = 0; i<Fp.size(); i++) {
-			if (Fp[i]>0) {
+		double lowerbound = MYMAX,upperbound = MYMIN; //the range of the final result
+		for (int i=0,cur=0;i<Fp.size();i++){
+			if (Fp[i]>0 && Fp[i]<1){
+				lowerbound = (lowerbound>Fp[i]?Fp[i]:lowerbound);
+				upperbound = (upperbound>Fp[i]?upperbound:Fp[i]);
 				res.push_back(Fp[i]);
 				cur++;
-				cout << "APA order " << cur << "th Failure Rate Estimation Result: " << Fp[i] << endl;
+				//cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
 			}
 		}
+		cout<<endl<<"\t"<<cur<<" Failure Rate Result: "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
 		cout << endl;
-		string wrk2_pre="./APA_";
-		string wrk2_post="fail_res.txt";
-		wrk2_pre.append(cur);
-		wrk2_pre.append(wrk2_post);
-   		const char* file = wrk2_pre.c_str();
-		helperfunc::write_to_txt(res, file);
+	
 	}
 	cout << "CACHEFE finish Failure Rate Estimation...Press any key to return...\n";
 	system("read");

@@ -20,6 +20,7 @@ namespace helperfunc{
 	bool write_to_txt(vector<double> &Fp, const char *file);
 	bool write_to_txt(vector<vector<double> >&Fp, const char *file);
 	bool Mysolve(double A, double B, double C, double *dst);
+	bool write_res(vector<int> &order,vector<double> &res,const char *file);
 }
 
 #endif 

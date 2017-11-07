@@ -1,12 +1,12 @@
 
-# This is the makefile for APA
+# This is the makefile for CACHEFE
 # 1. Use g++ to compile
 # 2. Link libraray Eign to solve linear equations
 # 3. Compile under c++11 standard
 # 4. After compling, all the *.o files will be located in ./obj
 # 5. After compling, the executable file be located in ./
 
-TARGET = APA	
+TARGET = CACHEFE	
 
 .PHONY:clean
 
