@@ -13,8 +13,8 @@ int main(int argc,char *argv[]) {
 	//cout<<"finish read"<<endl;
 	//demo::safail();
 	//cout<<"finish sa"<<endl<<endl;
-
-
+	//exit(1);
+	
 	// parse Input 
 	cmdline::parser Myparser;
 	Myparser.add<string>("Algo",'A',"Algorithm used by CACHEFE",false,"APA",cmdline::oneof<string>("APA","APE"));

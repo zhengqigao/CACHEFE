@@ -32,7 +32,7 @@ using namespace std;
 #define READFAIL_ 1
 #define WRITEFAIL_ 2
 #define SAFAIL_ 3
-#define MYRATE 0.38
+#define MYRATE 0.39
 #define GD 1
 #define GS 2
 #define TWL 13E-8
