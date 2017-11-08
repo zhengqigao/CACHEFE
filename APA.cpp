@@ -31,7 +31,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	vector<vector<double> > ylim(2, vector<double>(nSimiter));
 	vector <vector<double> >Xsa(2, vector<double>(nSimiter));
 	//default_random_engine e(randseed);
-	normal_distribution<double> n(0, 1);
+	//normal_distribution<double> n(0, 1);
 	if (nC == 0 ) {
 		nS = nSimiter;
 		for (int i = 0; i < 2; i++) {
@@ -63,6 +63,8 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 			Xnew[i][j] = n(e);
 		}
 	}
+	//cout<<"IN sus_delta_sim "<<Xnew.size()<<"\t"<<Xnew[0].size()<<endl;
+	//system("read");
 	vector<vector<double> >Ynew(Xnew.size() / (2 * NumTrans), vector<double>(nS));// Ynew is the simulation result of Xnew, 6 transistors will be a cell
 	simout(Xnew, Ynew, nSimTotal, 0,simtype);// here because of epo==0, Ynew will be a vector
 	vector<vector<double> >X(XSeed.size() + Xnew.size(), vector<double>(Xnew[0].size()));
@@ -86,19 +88,20 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	helperfunc::delete_ref(Xsa, indSimFail, 2);
 	helperfunc::delete_ref(ylim, indSimFail, 2);
 
-	vector<double>Y1(nS), Y2(nS);
-	for (int i = 0; i < nS; i++) {
+	vector<double>Y1(Ynew[0].size()), Y2(Ynew[0].size());
+	for (int i = 0; i < Y1.size(); i++) {
 		Y1[i] = Ynew[0][i] - ylim[0][i];
 		Y2[i] = Ynew[0][i] - ylim[1][i];
 	}
 
-	vector<bool>indParamFail(nS);
+	vector<bool>indParamFail(Ynew[0].size()),wrk_ref(Ynew[0].size());
 	double probParamFail = 0;
-	for (int i = 0; i < nS; i++) {
+	for (int i = 0; i < indParamFail.size(); i++) {
 		indParamFail[i] = (Y1[i]<perfDelta[0] || Y2[i]>perfDelta[1]);
+		wrk_ref[i] = ~indParamFail[i];
 		probParamFail += indParamFail[i];
 	}
-	probParamFail /= (double(nS));
+	probParamFail /= (double(indParamFail.size()));
 	double probCur = probParamFail*(1 - probSimFail) + probSimFail;
 	if (probCur >= PROBSUB) {
 		double sigCur = sqrt((1 - probCur)*probCur / nS);
@@ -110,10 +113,10 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		output(probList, sigList,nSimTotal);
 		if (nC + 1 < nCend) {
 			//next APA order
-			helperfunc::delete_ref(X, indParamFail, 2);
-			helperfunc::delete_ref(Y, indParamFail, 2);
-			helperfunc::delete_ref(Xsa, indParamFail, 2);
-			helperfunc::delete_ref(ylim, indParamFail, 2);
+			helperfunc::delete_ref(X, wrk_ref, 2);
+			helperfunc::delete_ref(Y, wrk_ref, 2);
+			helperfunc::delete_ref(Xsa, wrk_ref, 2);
+			helperfunc::delete_ref(ylim, wrk_ref, 2);
 			sus_delta_sim(X, Y, Xsa, ylim,simtype);
 		}
 	}
@@ -123,13 +126,13 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		vector<double>perfDeltaCur(2);
 		getspec(Y1, Y2, probTarget, perfDeltaCur);
 
-		vector<bool>indParamFail(nS);
+		vector<bool>indParamFail(Ynew[0].size());
 		double probParamFail = 0;
-		for (int i = 0; i < nS; i++) {
+		for (int i = 0; i < indParamFail.size(); i++) {
 			indParamFail[i] = (Y1[i]<perfDeltaCur[0] || Y2[i]>perfDeltaCur[1]);
 			probParamFail += indParamFail[i];
 		}
-		probParamFail /= (double(nS));
+		probParamFail /= (double(indParamFail.size()));
 		double probCur = probParamFail*(1 - probSimFail) + probSimFail;
 		double sigCur = sqrt((1 - probCur)*probCur / nS);
 		vector<double>Y1Seed, Y2Seed;
@@ -639,8 +642,8 @@ bool SUS::metropolis(vector<double>&X, int nVar, vector<vector<double> > &XNext)
 		XNext[i][0] = X[i];
 	}
 	double step = 1;
-	std::uniform_real_distribution<double>randengine(0, 1);
-	std::normal_distribution<double>n(0, 1);
+	//std::uniform_real_distribution<double>randengine(0, 1);
+	//std::normal_distribution<double>n(0, 1);
 	vector<double>Xtemp(nVar);
 	for (int i = 0; i < nVar; i++) {
 		Xtemp[i] = step*n(e) + X[i];
@@ -703,7 +706,7 @@ bool SUS::output(vector<double>probList, vector<double>sigList,int &nSimTotal) {
 		cout << "enter function output,dimension is wrong,error!\n";
 		return 0;
 	}
-	//string tmp = "subsets probability"; helperfunc::display_matrix_vector(probList, tmp);
+	string tmp = "subsets probability"; helperfunc::display_matrix_vector(probList, tmp);
 	for (int i = 0; i < length; i++) {
 		probEst *= probList[i];
 	}
@@ -802,6 +805,125 @@ bool SUS::sim_SA_fake(vector<vector<double> >&Xsa, vector<double>&Res_ylimit, in
 
 bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype) {
 	//  when epo==1, it will return a matrix in Y;
+	//cout<<"In simout "<<X.size()<<"\t"<<X[0].size()<<endl;
+	//system("read");
+	if (epo == 1) {
+		if (Y[0].size() != X[0].size() || Y.size() * 2 * NumTrans != X.size()) {
+			cout << "enter function simout, dimension is wrong for epo==1,error!\n";
+			return 0;
+		}
+		int ncells = X.size(), nSim = X[0].size();
+		vector<double> bias(nSim);
+		gen_corr(bias,simtype);
+		for (int i = 0; i < ncells / (2 * NumTrans); i++)
+		{
+			vector<vector<double> > tmp(2 * NumTrans, vector<double>(nSim));
+			for (int m = 0; m < 2 * NumTrans; m++) {
+				for (int n = 0; n < nSim; n++) {
+					tmp[m][n] = X[2 * NumTrans*i + m][n] + bias[n];
+				}
+			}
+			simX(tmp, Y, i,simtype);
+		}
+		nSimTotal += nSim*ncells / 6;
+		return 1;
+	}
+	else {
+		if (Y[0].size() != X[0].size() || Y.size() != 1) {
+			cout << "enter function simout, dimension is wrong for epo==0,error!\n";
+			return 0;
+		}
+		int ncells = X.size(), nSim = X[0].size();
+		vector<double> bias(nSim);
+		gen_corr(bias,simtype);
+		vector<vector<double> >Yall(ncells / (2 * NumTrans), vector<double>(nSim));
+		for (int i = 0; i < ncells / (2 * NumTrans); i++)
+		{
+			vector<vector<double> > tmp(2 * NumTrans, vector<double>(nSim));
+			for (int m = 0; m < 2 * NumTrans; m++) {
+				for (int n = 0; n < nSim; n++) {
+					tmp[m][n] = X[2 * NumTrans*i + m][n] + bias[n];
+				}
+			}
+			simX(tmp, Yall, i,simtype);
+		}
+		for (int i = 0; i < nSim; i++) {
+			double tmp = MYMIN;
+			for (int j = 0; j < ncells / (2 * NumTrans); j++) {
+				tmp = tmp > Yall[j][i] ? tmp : Yall[j][i];
+			}
+			Y[0][i] = tmp;
+		}
+		nSimTotal += nSim*ncells / 6;
+		return 1;
+	}
+}
+
+bool SUS::simX(vector<vector<double> > &src, vector<vector<double> >&dst, int index, int simtype) {
+	//cout<<"IN simX : "<<src.size()<<"\t"<<src[0].size()<<endl;
+	//system("read");
+	switch (simtype)
+	{
+		case SAFAIL_: {
+			if (index < 0 || index >= dst.size()) {
+				cout << "Entering function simX. dimension is wrong,error!\n";
+				return 0;
+			}
+			simulator Simulator;
+			int length = dst[0].size();
+			vector<double>iPG(length);
+			vector<double>V2(length);
+			vector<vector<double> >wrk(NumTrans, vector<double>(length));
+			for (int i = 0; i < NumTrans; i++) {
+				for (int j = 0; j < length; j++) {
+					wrk[i][j] = src[i][j];
+				}
+			}
+			Simulator.dcsim(wrk, iPG, V2);
+			for (int i = 0; i < length; i++) {
+				dst[index][i] = iPG[i];
+			}
+			break;
+		}
+		case READFAIL_: {
+			if (index < 0 || index >= dst.size()) {
+				cout << "Entering function simX. dimension is wrong,error!\n";
+				return 0;
+			}
+			int length = dst[0].size();
+			simulator Simulator;
+			vector<double>delta_V(length);
+			Simulator.readsim(src, delta_V);
+			//cout<<"in simx "<<src.size()<<"\t"<<src[0].size()<<endl;
+			
+			for (int i = 0; i < length; i++) {
+				dst[index][i] = delta_V[i];
+			}
+			break;
+		}
+		case WRITEFAIL_: {
+			if (index < 0 || index >= dst.size()) {
+				cout << "Entering function simX. dimension is wrong,error!\n";
+				return 0;
+			}
+			int length = dst[0].size();
+			simulator Simulator;
+			vector<double>delta_t(length);
+			Simulator.writesim(src, delta_t);
+			for (int i = 0; i < length; i++) {
+				dst[index][i] = delta_t[i];
+			}
+			break;
+		}
+		default: {cout << "in function simX, Wrong SImulation type!\n"; }
+	}
+	return 1;
+}
+
+bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype) {
+	//  when epo==1, it will return a matrix in Y;
+	//cout<<"In simout "<<X.size()<<"\t"<<X[0].size()<<endl;
+	//system("read");
 	if (epo == 1) {
 		if (Y[0].size() != X[0].size() || Y.size() * 2 * NumTrans != X.size()) {
 			cout << "enter function simout, dimension is wrong for epo==1,error!\n";
@@ -839,9 +961,9 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 			simX(tmp, Yall, i,simtype);
 		}
 		for (int i = 0; i < nSim; i++) {
-			double tmp = MYMIN;
+			double tmp = MYMAX;
 			for (int j = 0; j < ncells / (2 * NumTrans); j++) {
-				tmp = tmp > Yall[j][i] ? tmp : Yall[j][i];
+				tmp = tmp < Yall[j][i] ? tmp : Yall[j][i];
 			}
 			Y[0][i] = tmp;
 		}
@@ -850,116 +972,53 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 	}
 }
 
-bool SUS::simX(vector<vector<double> > &src, vector<vector<double> >&dst, int index, int simtype) {
 
-	switch (simtype)
+
+bool SUS::MC(vector<int> &src,vector<double> &dst,int simtype,int nsim){
+	if (src.size()!=dst.size()){
+		cout<<"[Warning]:In function APA::MC,dimension is wrong!\n";
+	}
+		for (int j=0;j<src.size();j++){
+			int cur_cell=src[j];
+			int failnum=0;
+			for (int i=0;i<nsim;i++){
+				vector<vector<double> > cur_x(cur_cell*2*NumTrans,vector<double> (1));
+				for(int p=0;p<cur_x.size();p++){
+					cur_x[p][0]=n(e);
+				}
+				vector<vector<double> > wrk(cur_cell,vector<double> (1));
+				int simtimes;
+				simout2(cur_x,wrk,simtimes,1,simtype);
+				vector<vector<double> > ylim(2, vector<double>(1));
+				vector <vector<double> > Xsa(2, vector<double>(1));
+				vector<double>ylimit_V(1);
+				Xsa[0][0]=n(e);
+				Xsa[1][0]=n(e);
+				sim_SA_fake(Xsa, ylimit_V,simtype);
+				ylim[0][0] = ylimit_V[0] / t_C + u01[0];
+				ylim[1][0] = sig01[1] * n(e) + u01[1];
+				for (int p=0;p<wrk.size();p++){
+					if (isnan(wrk[p][0]) || wrk[p][0]<ylim[0][0] || wrk[p][0]>ylim[1][0]){
+						failnum+=1;
+						break;
+					}
+				}
+				cout<<"Finish "<<i<<"/"<<nsim<<" of the "<<j<<"th cell"<<endl;
+			}
+			dst[j] = double(failnum) /nsim;
+		}
+	return true;
+}
+
+
+
+bool SUS::gen_corr(vector<double> &bias,int simtype){
+	for (int i = 0; i < bias.size(); i++)
 	{
-		case SAFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			simulator Simulator;
-			int length = dst[0].size();
-			vector<double>iPG(length);
-			vector<double>V2(length);
-			vector<vector<double> >wrk(NumTrans, vector<double>(length));
-			for (int i = 0; i < NumTrans; i++) {
-				for (int j = 0; j < length; j++) {
-					wrk[i][j] = src[i][j];
-				}
-			}
-			Simulator.dcsim(wrk, iPG, V2);
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = iPG[i];
-			}
-			break;
-		}
-		case READFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			int length = dst[0].size();
-			simulator Simulator;
-			vector<double>delta_V(length);
-			Simulator.readsim(src, delta_V);
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = delta_V[i];
-			}
-			break;
-		}
-		case WRITEFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			int length = dst[0].size();
-			simulator Simulator;
-			vector<double>delta_t(length);
-			Simulator.writesim(src, delta_t);
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = delta_t[i];
-			}
-			break;
-		}
-		default: {cout << "in function simX, Wrong SImulation type!\n"; }
+		if (simtype==READFAIL_){bias[i]=n(e)*2.7;}
+		if (simtype==SAFAIL_){bias[i]=0;}//bias[i]=0;
+		if (simtype==WRITEFAIL_){bias[i]=n(e)*2.6;}
+
 	}
-	return 1;
+	return true;
 }
-	/*if (simtype == SAFAIL_) {
-		if (index < 0 || index >= dst.size()) {
-			cout << "Entering function simX. dimension is wrong,error!\n";
-			return 0;
-		}
-		simulator Simulator;
-		int length = dst[0].size();
-		vector<double>iPG(length);
-		vector<double>V2(length);
-		vector<vector<double> >wrk(NumTrans, vector<double>(length));
-		for (int i = 0; i < NumTrans; i++) {
-			for (int j = 0; j < length; j++) {
-				wrk[i][j] = src[i][j];
-			}
-		}
-		Simulator.dcsim(wrk, iPG, V2);
-		for (int i = 0; i < length; i++) {
-			dst[index][i] = iPG[i];
-		}
-		return 1;
-	}
-	else {
-		if (simtype == READFAIL_) {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			int length = dst[0].size();
-			simulator Simulator;
-			vector<double>delta_V(length);
-			Simulator.readsim(src, delta_V);
-			for (int i = 0; i < length; i++) {
-					dst[index][i] = delta_V[i];
-				}
-			return 1;
-			}
-		else {
-			if (simtype == WRITEFAIL_) {
-				if (index < 0 || index >= dst.size()) {
-					cout << "Entering function simX. dimension is wrong,error!\n";
-					return 0;
-				}
-				int length = dst[0].size();
-				simulator Simulator;
-				vector<double>delta_V(length);
-				Simulator.readsim(src, delta_V);
-				for (int i = 0; i < length; i++) {
-					dst[index][i] = delta_V[i];
-				}
-			}
-			return 1;
-		}
-	}
-	return 1;
-}
-*/

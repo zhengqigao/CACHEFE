@@ -5,7 +5,8 @@
 # 3. Compile under c++11 standard
 # 4. After compling, the executable file be located in ./
 
-TARGET = CACHEFE	
+TARGET = CACHEFE
+
 
 .PHONY:clean
 
@@ -16,9 +17,10 @@ BASE = $(basename $(CPP_FILES))
 OBJDIR = obj
 OBJS = $(addsuffix .o, $(addprefix $(OBJDIR)/,$(BASE)))
 
+.PRECIOUS:$(OBJDIR)/%.o
+
 all: $(TARGET)
 	@echo "Finish compiling..."
-	@ rm -rf ${OBJDIR}
 $(OBJS): | $(OBJDIR)
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)

@@ -4,7 +4,8 @@
 #include"APA.h"
 
 namespace demo{
-	bool rundemo(int simtype,int par_nsimiter=2000);
+	bool rundemo(int simtype,int par_nsimiter=1000);
+	bool MCdemo(int simtype);
 	bool cleardemo();
 }
 

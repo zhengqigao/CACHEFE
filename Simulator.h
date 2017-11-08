@@ -3,6 +3,7 @@
 
 #include"helperfunc.h"
 #include"Eigen"
+#include <random>
 
 //sram circuit simulation class
 class simulator
@@ -24,7 +25,9 @@ public:
 	bool dcsim(vector<vector<double> > varValue, vector<double> &Res_iPG, vector<double>&Res_V2, bool dis = 0);
 	bool readsim(vector<vector<double> > &varValue,vector<double> &delta_V);
 	bool writesim(vector<vector<double> > &varValue, vector<double> &delta_t);
+	bool MC(vector<int> &src,vector<double> &dst,int simtype);
 	bool displayall();
+	bool addcorelation(int numsample,vector<double> &core_V);
 private:
 	bool display(int *array, string name);
 	bool display(double *array, string name);

@@ -20,11 +20,14 @@ public:
 	double t_C;
 	int randseed;
 	int nSimiter;
+
+	bool MC(vector<int> &src,vector<double> &dst,int simtype,int nsim=1E9);	
 	bool sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Yseed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed,int simtype);
 	bool genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<double>&Y1Seed, vector<double>&Y2Seed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int &nSimTotal, int  nSimiter, vector<double> perfSpec, vector<vector<vector<double> > >&Res_X, vector<vector<vector<double> > > &Res_Y, vector<vector<vector<double> > >&Res_Y1, vector<vector<vector<double> > >&Res_Y2, vector<vector<vector<double> > >&Res_Xsa, vector<vector<vector<double> > >&Res_ylim,int simtype);
 private:
 	bool sim_SA_fake(vector<vector<double> >&Xsa, vector<double>&Res_ylimit,int simtype);
 	bool simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype);
+	bool simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype);
 	bool simX(vector<vector<double> > &src, vector<vector<double> >&dst, int index,int simtype);
 	bool output(vector<double>probList, vector<double>sigList,int &nSimTotal);
 	bool getspec(vector<double> Y1, vector<double> Y2, double probtarget, vector<double> &perdeltaCur);
@@ -34,6 +37,7 @@ private:
 	double normpdf(double src, double mu = 0, double sigma = 1);
 	bool transpose(vector<double>&src, vector<vector<double> > &dst);
 	bool transpose(vector<vector<double> >&src, vector<double> &dst);
+	bool gen_corr(vector<double> &bias,int simtype);
 	vector<vector<double> > transpose(vector<vector<double> >&src);
 };
 

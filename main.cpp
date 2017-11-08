@@ -2,17 +2,22 @@
 #include"cmdline.h"
 #include"demo.h"
 
+
 int main(int argc,char *argv[]) {
 	
 	// Yu can uncomment the lines below to see demo results. The following lines will create a new directory ./CACHEFE_res/ 
 	// And it will put the demo results in the directory.
+	//demo::MCdemo(SAFAIL_);
+	//cout<<"finish sa MC\n";
+	demo::rundemo(WRITEFAIL_);
+	cout<<"finish write"<<endl;
+	demo::rundemo(READFAIL_);
+	cout<<"finish read"<<endl;
+	demo::rundemo(SAFAIL_);
+	cout<<"finish sa"<<endl<<endl;
+	exit(1);
+	
 
-	//cout<<"finish write"<<endl;
-	//demo::rundemo(READFAIL_);
-	//cout<<"finish read"<<endl;
-	//demo::rundemo(SAFAIL_);
-	//cout<<"finish sa"<<endl<<endl;
-	//exit(1);
 	
 	// parse Input 
 	cmdline::parser Myparser;

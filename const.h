@@ -5,6 +5,7 @@
 #include<iostream>
 #include<string>
 #include<math.h>
+#include <random>
 
 using namespace std;
 
@@ -32,8 +33,14 @@ using namespace std;
 #define READFAIL_ 1
 #define WRITEFAIL_ 2
 #define SAFAIL_ 3
-#define MYRATE 0.39
+//#define MYRATE 0.39
+#define MYRATE 1
 #define GD 1
 #define GS 2
-#define TWL 13E-8
+#define TWL 25E-8
+
+
+extern std::mt19937 e;
+extern normal_distribution<double> n;
+extern std::uniform_real_distribution<double>randengine;
 #endif 

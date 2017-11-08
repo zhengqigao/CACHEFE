@@ -1,6 +1,6 @@
 #include"Simulator.h"
 
-simulator::~simulator() {};
+simulator::~simulator(){};
 
 simulator::simulator() {};
 
@@ -37,6 +37,7 @@ bool simulator::dcsim(vector<vector<double> > varValue, vector<double> &Res_iPG,
 		cout << "entering function dcsim,dimension is wrong,error!\n";
 		return 0;
 	}
+	simulator::reset_M_VT_all();
 	int numSample = varValue[0].size();
 	vector<double> paramMean(NumTrans); for (int i = 0; i < NumTrans; i++) { paramMean[i] = M_VT_[i]; }
 	int num_NR_max = NewTonIer;
@@ -301,6 +302,9 @@ bool simulator::stamp_MOSFET(vector<vector<double> > &M, vector<double>&J, vecto
 
 bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValue, vector<vector<double> >&Res_paramValue, int simtype) {
 	int numSample = varValue[0].size();
+	//cout<<"Entering alter\n";
+	vector<double> cor_v(numSample);
+	simulator::addcorelation(numSample,cor_v);
 	switch (simtype)
 	{
 	case SAFAIL_: {
@@ -309,7 +313,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
 			}
 		}
 		break;
@@ -320,7 +324,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
 			}
 		}
 		break;
@@ -331,7 +335,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
 			}
 		}
 		break;
@@ -445,13 +449,16 @@ bool simulator::displayall() {
 };
 
 bool simulator::readsim(vector<vector<double> > &varValue, vector<double> &delta_V) {
+	//cout<<"in readsim : "<<varValue.size()<<"\t"<<varValue[0].size()<<endl;
 	if (delta_V.size() != varValue[0].size()) {
 		cout << "entering function readsim,dimension is wrong,error!\n";
 		return 0;
 	}
+	simulator::reset_M_VT_all();
 	int numSample = varValue[0].size();
 	vector<double> paramMean(2*NumTrans); for (int i = 0; i < 2*NumTrans; i++) { paramMean[i] = M_VT_[i]; }
 	vector<vector<double> >paramValue(2*NumTrans, vector<double>(numSample));
+	//cout<<varValue.size()<<varValue[0].size()<<endl;
 	alter(paramMean, varValue, paramValue,READFAIL_);
 	for (int sampleInd = 0; sampleInd < numSample; sampleInd++) {
 		vector<double>paramValueCur(2*NumTrans); for (int i = 0; i < 2*NumTrans; i++) { paramValueCur[i] = paramValue[i][sampleInd]; };
@@ -579,9 +586,10 @@ bool simulator::reset_M_VT_all() {
 
 bool simulator::writesim(vector<vector<double> > &varValue, vector<double> &delta_t) {
 	if (delta_t.size() != varValue[0].size()) {
-		cout << "entering function readsim,dimension is wrong,error!\n";
+		cout << "entering function writesim,dimension is wrong,error!\n";
 		return 0;
 	}
+	simulator::reset_M_VT_all();
 	int numSample = varValue[0].size();
 	vector<double> paramMean(2 * NumTrans); for (int i = 0; i < 2 * NumTrans; i++) { paramMean[i] = M_VT_[i]; }
 	vector<vector<double> >paramValue(2 * NumTrans, vector<double>(numSample));
@@ -736,3 +744,14 @@ double simulator::helper_integral(double cur_v) {
 	double C = Capitance(AXL_, NMOS_, VDD, cur_v, 0, GD);// +Capitance(NL_, NMOS_, 0, cur_v, 0, GD);
 	return C / I;
 };
+
+
+bool simulator::addcorelation(int numSample,vector<double> &cor_v){
+	//cout<<"entering addcorelation,numSample is : "<<numSample<<endl;
+	for (int i = 0;i < numSample; i++){
+		//cor_v[i]=n(e)*0.111*0.2;
+		cor_v[i]=0;
+		//cout<<cor_v[i];
+	}
+	return 1;
+}
