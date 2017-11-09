@@ -1,26 +1,32 @@
-This tool "CACHEFE" is designed for estimating SRAM failure rate.
 
-【Instruction】 
+#CACHEFE
 
-Currently, the tool supports modeling three kinds of SRAM Failure Rate: Read Failure, Write failure, Sense Amplifier Failure. For more details about the failure , please refer to:
+This tool "CACHEFE" is designed for estimating [SRAM](https://en.wikipedia.org/wiki/Static_random-access_memory) failure rate.
 
-[1] Mukhopadhyay S, Mahmoodi H, Roy K. Modeling of failure probability and statistical design of SRAM array for yield enhancement in nanoscaled CMOS[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2005, 24(12):1859-1880.
+##1. Introduction 
 
-Basically, MOSFET failure rate is so small (10^-6) that Monte Carlo method would be costly (10^8~10^9 simulations required), So here we use algorithm described in :
+Currently, the tool supports modeling three kinds of SRAM Failure Rate: **Read Failure**, **Write failure**, **Sense Amplifier Failure**. For more details about the failure , please refer to:
 
-[2] Yu H, Tao J, Liao C, et al. Efficient statistical analysis for correlated rare failure events via Asymptotic Probability Approximation[C]// Ieee/acm International Conference on Computer-Aided Design. IEEE, 2017:18.
+[[1]](http://ieeexplore.ieee.org/document/1542241) Mukhopadhyay S, Mahmoodi H, Roy K. Modeling of failure probability and statistical design of SRAM array for yield enhancement in nanoscaled CMOS[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2005, 24(12):1859-1880.
 
-【Prerequest】
+Basically, MOSFET failure rate is so small ( typically <math><msubsup><mi>10</mi><mi></mi><mi>-6</mi></msubsup></math>) that [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) would be costly (<math><msubsup><mi>10</mi><mi></mi><mi>8</mi></msubsup></math>
+~ <math><msubsup><mi>10</mi><mi></mi><mi>9</mi></msubsup></math>
+ simulations required), So here we use algorithm described in :
 
-Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
+[[2]](http://ieeexplore.ieee.org/document/7827595/) Yu H, Tao J, Liao C, et al. Efficient statistical analysis for correlated rare failure events via Asymptotic Probability Approximation[C]// Ieee/acm International Conference on Computer-Aided Design. IEEE, 2017:18.
 
-【Install】
+
+##2. Prerequest
+
+Currently, the source codes request **g++** to compile on Linux | Mac OSX platform.
+
+##3. Installation
 
 1. Change directory to the path where your unzipped file. (Command ---> cd "your path")
 2. Compile the source code. (Command ---> make)
-3. Run the programm. (Command ---> ./APA)
+3. Run the programm. (Command ---> ./CACHEFE)
 
-【Usage】
+##3. Usage
 
  ./CACHEFE -C (--Cell) argument [-A (--Algo) arguement]  [-T (--Type) argument]
 
@@ -33,18 +39,18 @@ Currently, the source codes request g++ to compile on Linux | Mac OSX platform.
 
 
 
-【Example】
+##4. Example
 
-./CACHEFE --Cell 64  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
+**./CACHEFE --Cell 64**  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
 
-./CACHEFE -C 32 -T read : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
-
-
-【Acknowledgement】
-
-1. Thanks to a Github contributor with cmdline parser, you can find it here: https://github.com/tanakh/cmdline 
+**./CACHEFE -C 32 -T read** : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
 
 
-【Supports】
+##5. Acknowledgement
 
-If you have any questions related to this tool, please feel free to contact with me: 14307130100@fudan.edu.cn or zhengqigao@163.com
+1. Thanks to a Github contributor with cmdline parser, you can find it here:[https://github.com/tanakh/cmdline](https://github.com/tanakh/cmdline)
+
+
+##6. Supports
+
+If you have any questions related to this tool, please feel free to contact with me: <14307130100@fudan.edu.cn> or <zhengqigao@163.com>
