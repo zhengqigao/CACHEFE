@@ -46,10 +46,28 @@ $ ./CACHEFE -C (--Cell) argument [options]
 
 ## 5. Example
 
+###5.1. Usage Example  
+
 **./CACHEFE --Cell 64**  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
 
 **./CACHEFE -C 32 -T read** : Using algorithm APA to simulate  read failure of a SRAM with 32 Cells.
 
+### 5.2. Result Example
+
+When you run the code in demo.cpp (by uncommenting the corresponding part in main.cpp), you can get results in ./CACHEFE_res, stored in txt (I have already put the demo reults there). If you have **Matlab**, you can use enter ```run draw.m``` in the command window to see the following images : 
+
+(1) Sense Amplifire Failure: 
+
+![SAFail.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/SAFailure.png)
+
+(2) Read Failure:
+
+
+![ReadFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/ReadFailure.png)
+
+(3) WriteFailure: 
+
+![WriteFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/WrtieFailure.png)
 
 ## 6. Acknowledgement
 
