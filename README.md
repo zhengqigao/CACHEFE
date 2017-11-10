@@ -17,11 +17,11 @@ Basically, MOSFET failure rate is so small ( typically ![](http://latex.codecogs
 
 ## 2. Prerequest
 
-Currently, the source codes request **g++** to compile on Linux | Mac OSX platform.
+Currently, the source codes request **g++ ( version > 4.6 )** to compile on Linux | Mac OSX platform.
 
 ## 3. Installation
 
-1. Change directory to the path where your unzipped file. 
+1. Change directory to the path where your unzipped file are located. 
 2. Compile the source code. 
 3. Run the programm.
 
