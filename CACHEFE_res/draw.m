@@ -8,7 +8,7 @@ for j=1:8
     plot(cells(cells>=j-1),Fp1(j,cells>=j-1),'LineWidth',2);
     hold on;
 end
-title('SA Failure');
+title('SA Failure');xlabel('Cell Number');ylabel('Probability');
 
 Fp2=load('./APAdemo_writefail__res.txt');nCend=8;
 figure(2);
@@ -16,7 +16,7 @@ for j=1:8
     plot(cells(cells>=j-1),Fp2(j,cells>=j-1),'LineWidth',2);
     hold on;
 end
-title('Write Failure');
+title('Write Failure');xlabel('Cell Number');ylabel('Probability');
 
 
 Fp3=load('./APAdemo_readfail__res.txt');nCend=8;
@@ -25,4 +25,4 @@ for j=1:8
     plot(cells(cells>=j-1),Fp3(j,cells>=j-1),'LineWidth',2);
     hold on;
 end
-title('Read Failure');
+title('Read Failure');xlabel('Cell Number');ylabel('Probability');
