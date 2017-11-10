@@ -22,9 +22,15 @@ Currently, the source codes request **g++** to compile on Linux | Mac OSX platfo
 
 ## 3. Installation
 
-1. Change directory to the path where your unzipped file. (Command ---> cd "your path")
-2. Compile the source code. (Command ---> make)
-3. Run the programm. (Command ---> ./CACHEFE)
+1. Change directory to the path where your unzipped file. 
+2. Compile the source code. 
+3. Run the programm.
+
+```
+$ cd "your path"
+$ make
+$ ./CACHEFE -C (--Cell) argument [options]
+```
 
 ## 4. Usage
 
