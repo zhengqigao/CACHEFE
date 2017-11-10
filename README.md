@@ -3,18 +3,17 @@
 
 This tool "CACHEFE" is designed for estimating [SRAM](https://en.wikipedia.org/wiki/Static_random-access_memory) failure rate.
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
 ## 1. Introduction 
 
 Currently, the tool supports modeling three kinds of SRAM Failure Rate: **Read Failure**, **Write failure**, **Sense Amplifier Failure**. For more details about the failure , please refer to:
 
 [[1]](http://ieeexplore.ieee.org/document/1542241) Mukhopadhyay S, Mahmoodi H, Roy K. Modeling of failure probability and statistical design of SRAM array for yield enhancement in nanoscaled CMOS[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2005, 24(12):1859-1880.
 
-Basically, MOSFET failure rate is so small ( typically $10^{-6}$ ) that [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) would be costly ( $10^8-10^9$ ) simulations required ), So here we use algorithm described in :
+Basically, MOSFET failure rate is so small ( typically ![](http://latex.codecogs.com/gif.latex?\\10^{-6}})
+) that [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) would be costly ( ![](http://latex.codecogs.com/gif.latex?\\10^8-10^9})
+ simulations required ), So here we use algorithm described in :
 
 [[2]](http://ieeexplore.ieee.org/document/7827595/) Yu H, Tao J, Liao C, et al. Efficient statistical analysis for correlated rare failure events via Asymptotic Probability Approximation[C]// Ieee/acm International Conference on Computer-Aided Design. IEEE, 2017:18.
-
 
 ## 2. Prerequest
 
