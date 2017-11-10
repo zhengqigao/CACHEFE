@@ -98,7 +98,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	double probParamFail = 0;
 	for (int i = 0; i < indParamFail.size(); i++) {
 		indParamFail[i] = (Y1[i]<perfDelta[0] || Y2[i]>perfDelta[1]);
-		wrk_ref[i] = ~indParamFail[i];
+		wrk_ref[i] = !indParamFail[i];// !  ~  CAUTION
 		probParamFail += indParamFail[i];
 	}
 	probParamFail /= (double(indParamFail.size()));
