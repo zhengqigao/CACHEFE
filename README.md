@@ -46,7 +46,7 @@ $ ./CACHEFE -C (--Cell) argument [options]
 
 ## 5. Example
 
-###5.1. Usage Example  
+### 5.1. Usage Example  
 
 **./CACHEFE --Cell 64**  : Using algorithm APA to simulate  all types of failure of a SRAM with 64 Cells.
 
