@@ -67,7 +67,7 @@ When you run the code in demo.cpp (by uncommenting the corresponding part in mai
 
 (3) WriteFailure: 
 
-![WriteFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/WrtieFailure.png)
+![WriteFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/WriteFailure.png)
 
 ## 6. Acknowledgement
 
