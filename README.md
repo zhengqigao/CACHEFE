@@ -11,7 +11,7 @@ Currently, the tool supports modeling three kinds of SRAM Failure Rate: **Read F
 
 [[1]](http://ieeexplore.ieee.org/document/1542241) Mukhopadhyay S, Mahmoodi H, Roy K. Modeling of failure probability and statistical design of SRAM array for yield enhancement in nanoscaled CMOS[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2005, 24(12):1859-1880.
 
-Basically, MOSFET failure rate is so small ( typically <img src="http://chart.googleapis.com/chart?cht=tx&chl= $10^{-6}$" style="border:none;"> ) that [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) would be costly ( <img src="http://chart.googleapis.com/chart?cht=tx&chl= $10^8-10^9$" style="border:none;"> simulations required), So here we use algorithm described in :
+Basically, MOSFET failure rate is so small ( typically ![](http://chart.googleapis.com/chart?cht=tx&chl= $10^{-6}$) ) that [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) would be costly ( ![](http://chart.googleapis.com/chart?cht=tx&chl= $10^8-10^9$) simulations required ), So here we use algorithm described in :
 
 [[2]](http://ieeexplore.ieee.org/document/7827595/) Yu H, Tao J, Liao C, et al. Efficient statistical analysis for correlated rare failure events via Asymptotic Probability Approximation[C]// Ieee/acm International Conference on Computer-Aided Design. IEEE, 2017:18.
 
