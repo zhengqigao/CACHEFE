@@ -249,12 +249,12 @@ bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vec
 			vector<vector<double> >Y1Temp(YTemp), Y2Temp(YTemp);
 			double max1 = MYMIN, min2 = MYMAX;
 			int hasnan = 0;
-			for (int i = 0; i < YTemp.size(); i++) {
-				hasnan += isnan(Y1Temp[i][0]);
-				Y1Temp[i][0] -= ylimTemp[0];
-				Y2Temp[i][0] -= ylimTemp[1];
-				max1 = max1 > Y1Temp[i][0] ? max1 : Y1Temp[i][0];
-				min2 = min2 < Y2Temp[i][0] ? min2 : Y2Temp[i][0];
+			for (int ii = 0; ii < YTemp.size(); ii++) {
+				hasnan += isnan(Y1Temp[ii][0]);
+				Y1Temp[ii][0] -= ylimTemp[0];
+				Y2Temp[ii][0] -= ylimTemp[1];
+				max1 = max1 > Y1Temp[ii][0] ? max1 : Y1Temp[ii][0];
+				min2 = min2 < Y2Temp[ii][0] ? min2 : Y2Temp[ii][0];
 			}
 			if (hasnan > 0 || max1 < perfSpec[0] || min2>perfSpec[1]) {
 				vector<double>wrk_XTemp(XTemp.size());
@@ -545,12 +545,12 @@ bool SUS::expandSeed(vector<vector<double> >&XSeed, vector<vector<double> >&YSee
 			vector<vector<double> >Y1Temp(YTemp), Y2Temp(YTemp);
 			double max1 = MYMIN, min2 = MYMAX;
 			int hasnan = 0;
-			for (int i = 0; i < YTemp.size(); i++) {
-				hasnan += isnan(Y1Temp[i][0]);
-				Y1Temp[i][0] -= ylimTemp[0];
-				Y2Temp[i][0] -= ylimTemp[1];
-				max1 = max1 > Y1Temp[i][0] ? max1 : Y1Temp[i][0];
-				min2 = min2 < Y2Temp[i][0] ? min2 : Y2Temp[i][0];
+			for (int ii = 0; ii < YTemp.size(); ii++) {
+				hasnan += isnan(Y1Temp[ii][0]);
+				Y1Temp[ii][0] -= ylimTemp[0];
+				Y2Temp[ii][0] -= ylimTemp[1];
+				max1 = max1 > Y1Temp[ii][0] ? max1 : Y1Temp[ii][0];
+				min2 = min2 < Y2Temp[ii][0] ? min2 : Y2Temp[ii][0];
 			}
 			if (hasnan > 0 || max1 < 0 || min2>0) {
 				vector<double>wrk_XTemp(XTemp.size());
@@ -1007,9 +1007,34 @@ bool SUS::MC(vector<int> &src, vector<double> &dst, int simtype, int nsim) {
 					break;
 				}
 			}
-			cout << "Finish " << i << "/" << nsim << " of the " << j << "th cell" << endl;
+			cout << "Finish " << i << "/" << nsim << " of the " << j << "th cell,cell number is :"<<cur_cell << endl;
 		}
+		string cur;
+		switch (simtype) {
+			case READFAIL_:
+				cur = "read";
+				break;
+			case WRITEFAIL_:
+				cur = "write";
+				break;
+			case SAFAIL_:
+				cur = "sa";
+				break;
+			default:
+				cout << "[Error]:wrong simulatinon type for CACHFE\n";
+				exit(1);
+			}
 		dst[j] = double(failnum) / nsim;
+		string wrk_pre = "./CACHEFE_res/APAdemo_";
+		string  wrk_pos = "fail__MC_res.txt";
+		wrk_pre.append(cur);
+		wrk_pre.append(wrk_pos);
+		const char* file = wrk_pre.c_str();
+		FILE *fp=NULL;
+		fp = fopen(file, "a+");
+		fprintf(fp, "%d", cur_cell);
+		fprintf(fp, ",%E\n",dst[j]);
+		fclose(fp);
 	}
 	return true;
 }
