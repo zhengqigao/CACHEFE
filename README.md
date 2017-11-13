@@ -58,16 +58,16 @@ When you run the code in demo.cpp (by uncommenting the corresponding part in mai
 
 (1) Sense Amplifire Failure: 
 
-![SAFail.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/SAFailure.png)
+![SAFail.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/SA.png)
 
 (2) Read Failure:
 
 
-![ReadFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/ReadFailure.png)
+![ReadFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/Read.png)
 
 (3) WriteFailure: 
 
-![WriteFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/WriteFailure.png)
+![WriteFailure.png](https://github.com/GoldenCheese/CACHEFE/blob/master/CACHEFE_res/Write.png)
 
 ## 6. Acknowledgement
 
