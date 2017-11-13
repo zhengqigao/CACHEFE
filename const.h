@@ -33,13 +33,28 @@ using namespace std;
 #define READFAIL_ 1
 #define WRITEFAIL_ 2
 #define SAFAIL_ 3
+
 //#define MYRATE 0.39
-#define MYRATE 1
+#define MYRATE 0.522
+#define REALCOR 0.025
+#define FAKECOR 0.025
+
+
+// 0.65 0.05 0.05
+//0.6 0.04 0.08
+//0.5 0.03 0.02
+// 0.52 0.025 0.025
+// 0.525 0.025 0.025
+// 0.522(0.521) 0.025 0.025
 #define GD 1
 #define GS 2
-#define TWL 25E-8
 
-
+#define TWL 16E-8
+#define REALCOR2 0.11
+#define FAKECOR2 0.11
+// 25E-8 0.20 0.20
+// 27E-8 0.19 0.19
+// 16E-8 0.11 0.11
 extern std::mt19937 e;
 extern normal_distribution<double> n;
 extern std::uniform_real_distribution<double>randengine;

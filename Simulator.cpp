@@ -1,17 +1,38 @@
 #include"Simulator.h"
 
-simulator::~simulator(){};
+simulator::~simulator() {};
 
-simulator::simulator() {};
+simulator::simulator() {
+	M_ND_[0] = 2; M_ND_[1] = 1; M_ND_[2] = 2;
+	M_NG_[0] = M_NG_[1] = M_NG_[2] = 1;
+	M_NS_[0] = -1; M_NS_[1] = 2; M_NS_[2] = 1;
+	M_TYPE_[0] = M_TYPE_[1] = M_TYPE_[3] = M_TYPE_[4] = NMOS_; M_TYPE_[2] = M_TYPE_[5] = PMOS_;
+	M_VT_[0] = M_VT_[1] = M_VT_[3] = M_VT_[4] = 0.1750; M_VT_[2] = M_VT_[5] = -0.2640;
+	M_W_[0] = M_W_[3] = 0.16E-6; M_W_[1] = M_W_[4] = 0.07E-6; M_W_[2] = M_W_[5] = 0.08E-6;
+	M_LAMBDA_[0] = M_LAMBDA_[1] = M_LAMBDA_[2] = M_LAMBDA_[3] = M_LAMBDA_[4] = M_LAMBDA_[5] = 0;
+	M_L_[0] = M_L_[1] = M_L_[2] = M_L_[3] = M_L_[4] = M_L_[5] = 0.6E-7;
+	M_MU_[0] = M_MU_[1] = M_MU_[3] = M_MU_[4] = 0.0204; M_MU_[2] = M_MU_[5] = 0.0090;
+	M_COX_[0] = M_COX_[1] = M_COX_[3] = M_COX_[4] = 0.013595; M_COX_[2] = M_COX_[5] = 0.01298170;
+	M_COV_[0] = M_COV_[1] = M_COV_[3] = M_COV_[4] = 1.79454E-4; M_COV_[2] = M_COV_[5] = 1.6097308E-4;
+	/*M_ND_[NumTrans] = { 2,1,2 }, M_NG_[NumTrans] = { 1,1,1 }, M_NS_[NumTrans] = { -1,2,1 };
+	M_TYPE_[2 * NumTrans] = { NMOS_,NMOS_,PMOS_,NMOS_,NMOS_,PMOS_ };
+	M_VT_[2 * NumTrans] = { 0.1750,0.1750,-0.2640, 0.1750,0.1750,-0.2640 };
+	M_W_[2 * NumTrans] = { 0.16E-6,0.07E-6,0.08E-6,0.16E-6,0.07E-6,0.08E-6 };
+	M_L_[2 * NumTrans] = { 0.6E-7 ,0.6E-7,0.6E-7,0.6E-7 ,0.6E-7,0.6E-7 };
+	M_MU_[2 * NumTrans] = { 0.0204,0.0204,.0090 ,0.0204,0.0204,.0090 };
+	M_COX_[2 * NumTrans] = { 0.013595,0.013595,0.01298170,0.013595,0.013595,0.01298170 };
+	M_LAMBDA_[2 * NumTrans] = { 0,0,0,0,0,0 };
+	M_COV_[2 * NumTrans] = { 1.79454E-4,1.79454E-4, 1.6097308E-4,1.79454E-4,1.79454E-4,1.6097308E-4 };*/
+};
 
 
 bool simulator::set_M_VT_all(vector<double>src) {
-	if (src.size() != 2*NumTrans) {
+	if (src.size() != 2 * NumTrans) {
 		cout << "Cannot set value for VT beacuse of dimension difference!\n";
 		return 0;
 	}
 	else {
-		for (int i = 0; i < 2*NumTrans; i++) {
+		for (int i = 0; i < 2 * NumTrans; i++) {
 			M_VT_[i] = src[i];
 		}
 	}
@@ -55,7 +76,7 @@ bool simulator::dcsim(vector<vector<double> > varValue, vector<double> &Res_iPG,
 		PerfSpec[i] = i < num_node ? v_err_tol : i_err_tol;
 	}
 	vector<vector<double> >paramValue(NumTrans, vector<double>(numSample));
-	alter(paramMean, varValue, paramValue,SAFAIL_);
+	alter(paramMean, varValue, paramValue, SAFAIL_);
 
 	for (int sampleInd = 0; sampleInd < numSample; sampleInd++) {
 		vector<double>paramValueCur(NumTrans); for (int i = 0; i < NumTrans; i++) { paramValueCur[i] = paramValue[i][sampleInd]; };
@@ -304,7 +325,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 	int numSample = varValue[0].size();
 	//cout<<"Entering alter\n";
 	vector<double> cor_v(numSample);
-	simulator::addcorelation(numSample,cor_v);
+	simulator::addcorelation(numSample, cor_v);
 	switch (simtype)
 	{
 	case SAFAIL_: {
@@ -313,7 +334,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i] + cor_v[j];
 			}
 		}
 		break;
@@ -324,7 +345,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i] + cor_v[j];
 			}
 		}
 		break;
@@ -335,7 +356,7 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 		{
 			for (int j = 0; j < numSample; j++)
 			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i]+cor_v[j];
+				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i] + cor_v[j];
 			}
 		}
 		break;
@@ -347,32 +368,32 @@ bool simulator::alter(vector<double> &paramMean, vector<vector<double> >&varValu
 	}
 	return 1;
 }
-	/*	
-	int numSample = varValue[0].size();
-	if (simtype == SAFAIL_) {
-		vector<double>delta(3); delta[0] = 0.111*0.175 / sqrt(2); delta[1] = 0.111*0.175; delta[2] = 0.111*0.264;
-		for (int i = 0; i < varValue.size(); i++)
-		{
-			for (int j = 0; j < numSample; j++)
-			{
-				Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
-			}
-		}
-		return 1;
-	}
-	else {
-		if (simtype == READFAIL_) {
-			vector<double>delta{ 0.111*0.175 / sqrt(2),  0.111*0.175,  0.111*0.264,0.111*0.175 / sqrt(2),  0.111*0.175, 0.111*0.264 };
-			for (int i = 0; i < varValue.size(); i++)
-			{
-				for (int j = 0; j < numSample; j++)
-				{
-					Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
-				}
-			}
-			return 1;
-		}
-	}
+/*
+int numSample = varValue[0].size();
+if (simtype == SAFAIL_) {
+vector<double>delta(3); delta[0] = 0.111*0.175 / sqrt(2); delta[1] = 0.111*0.175; delta[2] = 0.111*0.264;
+for (int i = 0; i < varValue.size(); i++)
+{
+for (int j = 0; j < numSample; j++)
+{
+Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
+}
+}
+return 1;
+}
+else {
+if (simtype == READFAIL_) {
+vector<double>delta{ 0.111*0.175 / sqrt(2),  0.111*0.175,  0.111*0.264,0.111*0.175 / sqrt(2),  0.111*0.175, 0.111*0.264 };
+for (int i = 0; i < varValue.size(); i++)
+{
+for (int j = 0; j < numSample; j++)
+{
+Res_paramValue[i][j] = paramMean[i] + varValue[i][j] * delta[i];
+}
+}
+return 1;
+}
+}
 };*/
 
 bool simulator::simple_solve(vector<vector<double> >cur_M, vector<double>cur_J, vector<double> &V) {
@@ -456,19 +477,19 @@ bool simulator::readsim(vector<vector<double> > &varValue, vector<double> &delta
 	}
 	simulator::reset_M_VT_all();
 	int numSample = varValue[0].size();
-	vector<double> paramMean(2*NumTrans); for (int i = 0; i < 2*NumTrans; i++) { paramMean[i] = M_VT_[i]; }
-	vector<vector<double> >paramValue(2*NumTrans, vector<double>(numSample));
+	vector<double> paramMean(2 * NumTrans); for (int i = 0; i < 2 * NumTrans; i++) { paramMean[i] = M_VT_[i]; }
+	vector<vector<double> >paramValue(2 * NumTrans, vector<double>(numSample));
 	//cout<<varValue.size()<<varValue[0].size()<<endl;
-	alter(paramMean, varValue, paramValue,READFAIL_);
+	alter(paramMean, varValue, paramValue, READFAIL_);
 	for (int sampleInd = 0; sampleInd < numSample; sampleInd++) {
-		vector<double>paramValueCur(2*NumTrans); for (int i = 0; i < 2*NumTrans; i++) { paramValueCur[i] = paramValue[i][sampleInd]; };
+		vector<double>paramValueCur(2 * NumTrans); for (int i = 0; i < 2 * NumTrans; i++) { paramValueCur[i] = paramValue[i][sampleInd]; };
 		//tmp_pri = "paramValueCur"; display_matrix_vector(paramValueCur, tmp_pri);
 		vector <double>temp = paramValueCur;
 		temp[PL_] = -temp[PL_];
 		temp[PR_] = -temp[PR_];
 		int equalzero = 0;
-		for (int i = 0; i <2* NumTrans; i++) { equalzero = (temp[i] > 0 ? (equalzero + 1) : equalzero); };
-		int indSimFail = (equalzero == 2*NumTrans ? 0 : 1);
+		for (int i = 0; i <2 * NumTrans; i++) { equalzero = (temp[i] > 0 ? (equalzero + 1) : equalzero); };
+		int indSimFail = (equalzero == 2 * NumTrans ? 0 : 1);
 		//cout << "indSimFail :" << indSimFail << endl;
 		if (indSimFail == 1) {
 			delta_V[sampleInd] = NAN;
@@ -579,9 +600,9 @@ bool simulator::readsim(vector<vector<double> > &varValue, vector<double> &delta
 };
 
 bool simulator::reset_M_VT_all() {
-		M_VT_[0] = 0.1750, M_VT_[1] = 0.1750, M_VT_[2] = -0.2640;
-		M_VT_[3] = 0.1750, M_VT_[4] = 0.1750, M_VT_[5] = -0.2640;
-		return true;
+	M_VT_[0] = 0.1750, M_VT_[1] = 0.1750, M_VT_[2] = -0.2640;
+	M_VT_[3] = 0.1750, M_VT_[4] = 0.1750, M_VT_[5] = -0.2640;
+	return true;
 };
 
 bool simulator::writesim(vector<vector<double> > &varValue, vector<double> &delta_t) {
@@ -669,7 +690,7 @@ bool simulator::writesim(vector<vector<double> > &varValue, vector<double> &delt
 			}
 			//vtripR = 0.14;
 			//vtripR *= MYRATE;
-			double T = cal_integral(VDD, vtripR,1000);
+			double T = cal_integral(VDD, vtripR, 1000);
 			delta_t[sampleInd] = TWL - T;
 			//cout << "TWL : " << TWL << " T : " << T << endl;
 		}
@@ -680,13 +701,13 @@ bool simulator::writesim(vector<vector<double> > &varValue, vector<double> &delt
 //[function]Icurrent : calculate Ids of MOSFET given vg,vd,vs.
 double simulator::Icurrent(int MOS_num, int MOS_type, double Vg, double Vd, double Vs) {
 	double beta = M_MU_[MOS_num] * M_COX_[MOS_num] * M_W_[MOS_num] / M_L_[MOS_num];
-	if (MOS_type==NMOS_ && Vs > Vd) {
-		cout << "[Warning]:NMOS drain source exchange! Vd "<<Vd<<" Vs "<<Vs<<endl;
+	if (MOS_type == NMOS_ && Vs > Vd) {
+		cout << "[Warning]:NMOS drain source exchange! Vd " << Vd << " Vs " << Vs << endl;
 		double tmp = Vs;
 		Vs = Vd;
 		Vd = tmp;
 	}
-	if (MOS_type==PMOS_ && Vs < Vd) {
+	if (MOS_type == PMOS_ && Vs < Vd) {
 		cout << "[Warning]:PMOS drain source exchange! Vd " << Vd << " Vs " << Vs << endl;
 		double tmp = Vs;
 		Vs = Vd;
@@ -738,7 +759,7 @@ double simulator::cal_integral(double lower, double upper, int intervals) {
 double simulator::helper_integral(double cur_v) {
 	//cout << "PMOS region:";  double I1 = Icurrent(PL_, PMOS_, 0, cur_v, VDD); cout << "current : "<<I1 << endl;
 	//cout << "NMOS region:"; ; double I2 = Icurrent(AXL_, NMOS_, VDD, cur_v, 0); cout << "current : "<<I2 << endl;
-	double I = Icurrent(PL_, PMOS_, 0, cur_v, VDD)-Icurrent(AXL_, NMOS_, VDD, cur_v, 0);
+	double I = Icurrent(PL_, PMOS_, 0, cur_v, VDD) - Icurrent(AXL_, NMOS_, VDD, cur_v, 0);
 	//double I = I1 - I2;
 	//double C = Capitance(PL_, PMOS_, 0, cur_v, VDD, GD);// + Capitance(AXL_, NMOS_, VDD, cur_v, 0, GD);// +Capitance(NL_, NMOS_, 0, cur_v, 0, GD);
 	double C = Capitance(AXL_, NMOS_, VDD, cur_v, 0, GD);// +Capitance(NL_, NMOS_, 0, cur_v, 0, GD);
@@ -746,11 +767,11 @@ double simulator::helper_integral(double cur_v) {
 };
 
 
-bool simulator::addcorelation(int numSample,vector<double> &cor_v){
+bool simulator::addcorelation(int numSample, vector<double> &cor_v) {
 	//cout<<"entering addcorelation,numSample is : "<<numSample<<endl;
-	for (int i = 0;i < numSample; i++){
+	for (int i = 0; i < numSample; i++) {
 		//cor_v[i]=n(e)*0.111*0.2;
-		cor_v[i]=0;
+		cor_v[i] = 0;
 		//cout<<cor_v[i];
 	}
 	return 1;

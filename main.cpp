@@ -1,48 +1,48 @@
 #include"APA.h"
-#include"cmdline.h"
+//#include"cmdline.h"
 #include"demo.h"
 
 
-int main(int argc,char *argv[]) {
-	
+int main(int argc, char *argv[]) {
+
 	// Yu can uncomment the lines below to see demo results. The following lines will create a new directory ./CACHEFE_res/ 
 	// And it will put the demo results in the directory.
 	//demo::MCdemo(SAFAIL_);
 	//cout<<"finish sa MC\n";
 	demo::rundemo(WRITEFAIL_);
-	cout<<"finish write"<<endl;
+	cout << "finish write" << endl;
 	demo::rundemo(READFAIL_);
-	cout<<"finish read"<<endl;
+	cout << "finish read" << endl;
 	demo::rundemo(SAFAIL_);
-	cout<<"finish sa"<<endl<<endl;
+	cout << "finish sa" << endl << endl;
 	exit(1);
-	
 
-	
+
+	/*
 	// parse Input 
 	cmdline::parser Myparser;
-	Myparser.add<string>("Algo",'A',"Algorithm used by CACHEFE",false,"APA",cmdline::oneof<string>("APA","APE"));
-	Myparser.add<string>("Type",'T',"Failure Type simulated by CACHEFE",false,"all");
-	Myparser.add<int>("Cell",'C',"cell number of SRAM simulated by CACHEFE",true,0,cmdline::range(1, 65));
+	Myparser.add<string>("Algo", 'A', "Algorithm used by CACHEFE", false, "APA", cmdline::oneof<string>("APA", "APE"));
+	Myparser.add<string>("Type", 'T', "Failure Type simulated by CACHEFE", false, "all");
+	Myparser.add<int>("Cell", 'C', "cell number of SRAM simulated by CACHEFE", true, 0, cmdline::range(1, 65));
 	Myparser.parse_check(argc, argv);
-	
+
 	string Algo = Myparser.get<string>("Algo");
 	string simtype = Myparser.get<string>("Type");
-	transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower); 
+	transform(simtype.begin(), simtype.end(), simtype.begin(), ::tolower);
 	int Cellnum = Myparser.get<int>("Cell");
 	std::vector<int> Simtypelist;
-	if (simtype != "all" && simtype !="read" && simtype != "write" && simtype !="sa"){
-		cout<<"[Error]: Simulation type is wrong, must bt one of ['all','read','write','sa']"<<endl;
+	if (simtype != "all" && simtype != "read" && simtype != "write" && simtype != "sa") {
+		cout << "[Error]: Simulation type is wrong, must bt one of ['all','read','write','sa']" << endl;
 		exit(1);
 	}
 
-	if (simtype=="all" || simtype=="read"){
+	if (simtype == "all" || simtype == "read") {
 		Simtypelist.push_back(READFAIL_);
 	}
-	if (simtype=="all" || simtype=="write"){
+	if (simtype == "all" || simtype == "write") {
 		Simtypelist.push_back(WRITEFAIL_);
 	}
-	if (simtype=="all" || simtype=="sa"){
+	if (simtype == "all" || simtype == "sa") {
 		Simtypelist.push_back(SAFAIL_);
 	}
 
@@ -51,29 +51,29 @@ int main(int argc,char *argv[]) {
 	cout << "\n----------CACHEFE for SRAM Failure Rate Estimation ----------\n\n\n";
 
 	//begin simulating very type of failure
-	for (int i=0;i<Simtypelist.size();i++){
+	for (int i = 0; i<Simtypelist.size(); i++) {
 		// let's do simulation !
 		vector<vector<double> >XSeed, Yseed, XsaSeed, ylimSeed;
 
 		string cur;
 
-		switch (Simtypelist[i]){
-			case READFAIL_:
-				cur="Read";
-				break;
-			case WRITEFAIL_:
-				cur="Write";
-				break;
-			case SAFAIL_:
-				cur="Sense Amplifier";
-				break;
-			default:
-				cout<<"[Error]:wrong simulatinon type for CACHFE\n";
-				exit(1);
+		switch (Simtypelist[i]) {
+		case READFAIL_:
+			cur = "Read";
+			break;
+		case WRITEFAIL_:
+			cur = "Write";
+			break;
+		case SAFAIL_:
+			cur = "Sense Amplifier";
+			break;
+		default:
+			cout << "[Error]:wrong simulatinon type for CACHFE\n";
+			exit(1);
 		}
 
-		string wrk1_pre="\nSRAM 【";
-		string wrk1_post=" Failure Rate】 Estimation :  \n\n";
+		string wrk1_pre = "\nSRAM 【";
+		string wrk1_post = " Failure Rate】 Estimation :  \n\n";
 		wrk1_pre.append(cur);
 		wrk1_pre.append(wrk1_post);
 		cout << wrk1_pre;
@@ -89,14 +89,14 @@ int main(int argc,char *argv[]) {
 		SUS SUS_instance(par_nCend, par_u01, par_sig01, par_t_C, par_randseed, par_nsimiter);
 
 
-		SUS_instance.sus_delta_sim(XSeed, Yseed, XsaSeed, ylimSeed,Simtypelist[i]);
+		SUS_instance.sus_delta_sim(XSeed, Yseed, XsaSeed, ylimSeed, Simtypelist[i]);
 		// get results
 		double prob = 1;
 		vector<double>probAnd(SUS_instance.nCend);
 		vector<double> Fp(par_nCend);// very order estimation results, may be negative
-		int totalsim=0;
+		int totalsim = 0;
 		for (int j = 1; j <= par_nCend; j++) {
-			totalsim+=SUS_instance.APA_simtotalList[j-1];
+			totalsim += SUS_instance.APA_simtotalList[j - 1];
 			prob *= SUS_instance.APA_probEstList[j - 1];
 			probAnd[j - 1] = prob;
 			// APA result
@@ -106,22 +106,22 @@ int main(int argc,char *argv[]) {
 			}
 		}
 		std::vector<double> res;
-		double lowerbound = MYMAX,upperbound = MYMIN; //the range of the final result
-		for (int i=0,cur=0;i<Fp.size();i++){
-			if (Fp[i]>0 && Fp[i]<1){
-				lowerbound = (lowerbound>Fp[i]?Fp[i]:lowerbound);
-				upperbound = (upperbound>Fp[i]?upperbound:Fp[i]);
+		double lowerbound = MYMAX, upperbound = MYMIN; //the range of the final result
+		for (int i = 0, cur = 0; i<Fp.size(); i++) {
+			if (Fp[i]>0 && Fp[i]<1) {
+				lowerbound = (lowerbound>Fp[i] ? Fp[i] : lowerbound);
+				upperbound = (upperbound>Fp[i] ? upperbound : Fp[i]);
 				res.push_back(Fp[i]);
 				cur++;
 				//cout<<cur<<"th Estimation Result: "<<Fp[i]<<endl;
 			}
 		}
-		cout<<endl<<"\t"<<cur<<" Failure Rate : "<<"[ "<<lowerbound<<" , "<<upperbound<<"]"<<endl;
-		cout<<"\tTotal Simulation Times : "<<totalsim<<endl;
+		cout << endl << "\t" << cur << " Failure Rate : " << "[ " << lowerbound << " , " << upperbound << "]" << endl;
+		cout << "\tTotal Simulation Times : " << totalsim << endl;
 		cout << endl;
-	
+
 	}
 	cout << "CACHEFE finish Failure Rate Estimation...Press any key to return...\n";
 	system("read");
-	return 1;
+	return 1;*/
 }

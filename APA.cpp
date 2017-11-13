@@ -15,12 +15,12 @@ SUS::SUS(int par_nCend, double *par_u01, double *par_sig01, double par_t_C, int 
 	cout<<par_t_C<<endl;
 	cout<<par_randseed<<endl;
 	cout<<par_nSmimiter<<endl;
-*/
+	*/
 }
 
 SUS::~SUS() {};
 
-bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed,int simtype) {
+bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int simtype) {
 	// setup
 	int nSimTotal = 0, nIter = 0;
 	vector<double>probList, sigList;
@@ -32,7 +32,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	vector <vector<double> >Xsa(2, vector<double>(nSimiter));
 	//default_random_engine e(randseed);
 	//normal_distribution<double> n(0, 1);
-	if (nC == 0 ) {
+	if (nC == 0) {
 		nS = nSimiter;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < nSimiter; j++) {
@@ -40,7 +40,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 			}
 		}
 		vector<double>ylimit_V(nSimiter);
-		sim_SA_fake(Xsa, ylimit_V,simtype);
+		sim_SA_fake(Xsa, ylimit_V, simtype);
 		for (int i = 0; i < ylim[0].size(); i++) {
 			ylim[0][i] = ylimit_V[i] / t_C + u01[0];
 			ylim[1][i] = sig01[1] * n(e) + u01[1];
@@ -52,7 +52,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		ylim = ylimSeed;
 		if (YSeed[0].size()<nSimiter) {
 			vector<vector<vector<double> > >Xcell, Ycell;
-			expandSeed(XSeed, YSeed, Xsa, ylimSeed, nSimTotal, nSimiter, XSeed, YSeed, Xsa, ylim,Xcell,Ycell,simtype);
+			expandSeed(XSeed, YSeed, Xsa, ylimSeed, nSimTotal, nSimiter, XSeed, YSeed, Xsa, ylim, Xcell, Ycell, simtype);
 		}
 		nC = YSeed.size();
 		nS = YSeed[0].size();
@@ -66,7 +66,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	//cout<<"IN sus_delta_sim "<<Xnew.size()<<"\t"<<Xnew[0].size()<<endl;
 	//system("read");
 	vector<vector<double> >Ynew(Xnew.size() / (2 * NumTrans), vector<double>(nS));// Ynew is the simulation result of Xnew, 6 transistors will be a cell
-	simout(Xnew, Ynew, nSimTotal, 0,simtype);// here because of epo==0, Ynew will be a vector
+	simout(Xnew, Ynew, nSimTotal, 0, simtype);// here because of epo==0, Ynew will be a vector
 	vector<vector<double> >X(XSeed.size() + Xnew.size(), vector<double>(Xnew[0].size()));
 	vector<vector<double> >Y(YSeed.size() + Ynew.size(), vector<double>(Ynew[0].size()));
 	// obtain X,Y
@@ -94,7 +94,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		Y2[i] = Ynew[0][i] - ylim[1][i];
 	}
 
-	vector<bool>indParamFail(Ynew[0].size()),wrk_ref(Ynew[0].size());
+	vector<bool>indParamFail(Ynew[0].size()), wrk_ref(Ynew[0].size());
 	double probParamFail = 0;
 	for (int i = 0; i < indParamFail.size(); i++) {
 		indParamFail[i] = (Y1[i]<perfDelta[0] || Y2[i]>perfDelta[1]);
@@ -109,15 +109,15 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		perfDeltaList.push_back(perfDeltaCur);
 		probList.push_back(probCur);
 		sigList.push_back(sigCur);
-		cout << "\tFinish " << nC + 1 << "th order APA......current order simulation times : "<<nSimTotal<<endl;
-		output(probList, sigList,nSimTotal);
+		cout << "\tFinish " << nC + 1 << "th order APA......current order simulation times : " << nSimTotal << endl;
+		output(probList, sigList, nSimTotal);
 		if (nC + 1 < nCend) {
 			//next APA order
 			helperfunc::delete_ref(X, wrk_ref, 2);
 			helperfunc::delete_ref(Y, wrk_ref, 2);
 			helperfunc::delete_ref(Xsa, wrk_ref, 2);
 			helperfunc::delete_ref(ylim, wrk_ref, 2);
-			sus_delta_sim(X, Y, Xsa, ylim,simtype);
+			sus_delta_sim(X, Y, Xsa, ylim, simtype);
 		}
 	}
 	else {
@@ -147,10 +147,10 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 		perfDeltaList.push_back(perfDeltaCur);
 		while (nIter <= NITERMAX) {
 			vector<vector<vector<double> > >X, Y, Y1, Y2, Xsa, ylim;
-			genX(XSeed, YSeed, Y1Seed, Y2Seed, XsaSeed, ylimSeed, nSimTotal, nSimiter, perfDeltaList[perfDeltaList.size() - 1], X, Y, Y1, Y2, Xsa, ylim,simtype);
+			genX(XSeed, YSeed, Y1Seed, Y2Seed, XsaSeed, ylimSeed, nSimTotal, nSimiter, perfDeltaList[perfDeltaList.size() - 1], X, Y, Y1, Y2, Xsa, ylim, simtype);
 			nIter = nIter + 1;
 			int eop = 0;
-			filterX(X, Y, Y1, Y2, Xsa, ylim, probList, sigList, perfDeltaList, nSimTotal, nSimiter, XSeed, YSeed, Y1Seed, Y2Seed, XsaSeed, ylimSeed, eop,simtype);
+			filterX(X, Y, Y1, Y2, Xsa, ylim, probList, sigList, perfDeltaList, nSimTotal, nSimiter, XSeed, YSeed, Y1Seed, Y2Seed, XsaSeed, ylimSeed, eop, simtype);
 			if (eop == 1) {
 				break;
 			}
@@ -159,7 +159,7 @@ bool SUS::sus_delta_sim(vector<vector<double> >&XSeed, vector<vector<double> >&Y
 	return 1;
 }
 
-bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<double>&Y1Seed, vector<double>&Y2Seed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int &nSimTotal, int  nSimiter, vector<double> perfSpec, vector<vector<vector<double> > >&Res_X, vector<vector<vector<double> > > &Res_Y, vector<vector<vector<double> > >&Res_Y1, vector<vector<vector<double> > >&Res_Y2, vector<vector<vector<double> > >&Res_Xsa, vector<vector<vector<double> > >&Res_ylim,int simtype) {
+bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<double>&Y1Seed, vector<double>&Y2Seed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int &nSimTotal, int  nSimiter, vector<double> perfSpec, vector<vector<vector<double> > >&Res_X, vector<vector<vector<double> > > &Res_Y, vector<vector<vector<double> > >&Res_Y1, vector<vector<vector<double> > >&Res_Y2, vector<vector<vector<double> > >&Res_Xsa, vector<vector<vector<double> > >&Res_ylim, int simtype) {
 	int nC = YSeed.size(), nSeed = YSeed[0].size();
 	vector<vector<double> >XsapSeed(XsaSeed);
 	vector<vector<double> >ylimpSeed(ylimSeed);
@@ -179,7 +179,7 @@ bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vec
 		}
 		helperfunc::choose_ref(YSeed, YpSeed, ref2, 1);
 		helperfunc::delete_ref(YSeed, ref2, 1);
-		expandSeed(XpSeed, YpSeed, XsapSeed, ylimpSeed, nSimTotal, nSimiter, XpSeed, YpSeed, XsapSeed, ylimpSeed, Xcell, Ycell,simtype);
+		expandSeed(XpSeed, YpSeed, XsapSeed, ylimpSeed, nSimTotal, nSimiter, XpSeed, YpSeed, XsapSeed, ylimpSeed, Xcell, Ycell, simtype);
 	}
 	vector<vector<vector<double> > >X(nSeed), Y(nSeed), Y1(nSeed), Y2(nSeed), Xsa(nSeed), ylim(nSeed);
 	int nSim = nSeed, nAccept = 0;
@@ -227,14 +227,14 @@ bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vec
 			vector<vector<double> >XTemp((X[i][X[i].size() - 1]).size(), vector<double>(1));
 			metropolis(wrk, wrk.size(), XTemp);
 			vector<vector<double> >YTemp(XTemp.size() / (2 * NumTrans), vector<double>(1));
-			simout(XTemp, YTemp, nSimTotal, 0,simtype);
+			simout(XTemp, YTemp, nSimTotal, 0, simtype);
 			vector<vector<double> >XsaTemp((Xsa[i][Xsa[i].size() - 1]).size(), vector<double>(1));
 			vector<double> ylimTemp(2);
 			if (nC < 2) {
 				vector<double> wrk2(Xsa[i][Xsa[i].size() - 1]);
 				metropolis(wrk2, 2, XsaTemp);
 				vector<double>ylimit_V(1);
-				sim_SA_fake(XsaTemp, ylimit_V,simtype);
+				sim_SA_fake(XsaTemp, ylimit_V, simtype);
 				ylimTemp[0] = ylimit_V[0] / t_C + u01[0];
 				ylimTemp[1] = ylimit_V[0] / t_C + u01[1];
 			}
@@ -333,7 +333,7 @@ bool SUS::genX(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vec
 }
 
 
-bool SUS::filterX(vector<vector<vector<double> > > &X, vector<vector<vector<double> > >&Y, vector<vector<vector<double> > >&Y1, vector<vector<vector<double> > >&Y2, vector<vector<vector<double> > >&Xsa, vector<vector<vector<double> > >&ylim, vector<double>&probList, vector<double>&sigList, vector<vector<double> >&perfDeltaList, int &nSimTotal, int nSimiter, vector<vector<double> > &Res_XSeed, vector<vector<double> > &Res_YSeed, vector<double>&Res_Y1Seed, vector<double>&Res_Y2Seed, vector<vector<double> >&Res_XsaSeed, vector<vector<double> >&Res_ylimSeed, int &Res_eop,int simtype) {
+bool SUS::filterX(vector<vector<vector<double> > > &X, vector<vector<vector<double> > >&Y, vector<vector<vector<double> > >&Y1, vector<vector<vector<double> > >&Y2, vector<vector<vector<double> > >&Xsa, vector<vector<vector<double> > >&ylim, vector<double>&probList, vector<double>&sigList, vector<vector<double> >&perfDeltaList, int &nSimTotal, int nSimiter, vector<vector<double> > &Res_XSeed, vector<vector<double> > &Res_YSeed, vector<double>&Res_Y1Seed, vector<double>&Res_Y2Seed, vector<vector<double> >&Res_XsaSeed, vector<vector<double> >&Res_ylimSeed, int &Res_eop, int simtype) {
 	Res_eop = 0;
 	int nSeed = Y.size();
 	vector<vector<vector<double> > >indSimFail(nSeed), indParamFail(nSeed), indFail(nSeed);
@@ -486,17 +486,17 @@ bool SUS::filterX(vector<vector<vector<double> > > &X, vector<vector<vector<doub
 	sigList.push_back(sigCur);
 	perfDeltaList.push_back(perfDeltaCur);
 	if (Res_eop == 1) {
-		cout << "\tFinish " << Res_YSeed.size() << "th order APA......current order simulation times : "<<nSimTotal<<endl;
-		output(probList, sigList,nSimTotal);
+		cout << "\tFinish " << Res_YSeed.size() << "th order APA......current order simulation times : " << nSimTotal << endl;
+		output(probList, sigList, nSimTotal);
 		if (Res_YSeed.size() < nCend) {
-			sus_delta_sim(Res_XSeed, Res_YSeed, Res_XsaSeed, Res_ylimSeed,simtype);
+			sus_delta_sim(Res_XSeed, Res_YSeed, Res_XsaSeed, Res_ylimSeed, simtype);
 		}
 	}
 	return 1;
 };
 
 
-bool SUS::expandSeed(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int & nSimTotal, int nSimiter, vector<vector<double> >&Res_XSeed, vector<vector<double> >&Res_YSeed, vector<vector<double> >&Res_Xsa, vector<vector<double> >&Res_ylim, vector<vector<vector<double> > >&Xcell, vector<vector<vector<double> > >&Ycell,int simtype) {
+bool SUS::expandSeed(vector<vector<double> >&XSeed, vector<vector<double> >&YSeed, vector<vector<double> >&XsaSeed, vector<vector<double> >&ylimSeed, int & nSimTotal, int nSimiter, vector<vector<double> >&Res_XSeed, vector<vector<double> >&Res_YSeed, vector<vector<double> >&Res_Xsa, vector<vector<double> >&Res_ylim, vector<vector<vector<double> > >&Xcell, vector<vector<vector<double> > >&Ycell, int simtype) {
 	int nVar = XSeed.size(), nSeed = XSeed[0].size();
 	vector<vector<vector<double> > >X(nSeed), Y(nSeed), Xsa(nSeed), ylim(nSeed);
 	int nSim = nSeed, nAccept = 0;
@@ -530,13 +530,13 @@ bool SUS::expandSeed(vector<vector<double> >&XSeed, vector<vector<double> >&YSee
 			vector<vector<double> >XTemp((X[i][X[i].size() - 1]).size(), vector<double>(1));
 			metropolis(wrk, nVar, XTemp);
 			vector<vector<double> >YTemp(XTemp.size() / (2 * NumTrans), vector<double>(1));
-			simout(XTemp, YTemp, nSimTotal, 1,simtype);
+			simout(XTemp, YTemp, nSimTotal, 1, simtype);
 
 			vector<double> wrk2(Xsa[i][Xsa[i].size() - 1]);
 			vector<vector<double> >XsaTemp((Xsa[i][Xsa[i].size() - 1]).size(), vector<double>(1));
 			metropolis(wrk2, 2, XsaTemp);
 			vector<double>ylimit_V(1);
-			sim_SA_fake(XsaTemp, ylimit_V,simtype);
+			sim_SA_fake(XsaTemp, ylimit_V, simtype);
 
 			vector<double> ylimTemp(2);
 			ylimTemp[0] = ylimit_V[0] / t_C + u01[0];
@@ -698,7 +698,7 @@ bool SUS::getspec(vector<double> Y1, vector<double> Y2, double probTarget, vecto
 }
 
 
-bool SUS::output(vector<double>probList, vector<double>sigList,int &nSimTotal) {
+bool SUS::output(vector<double>probList, vector<double>sigList, int &nSimTotal) {
 	double probEst = 1;
 	//string tmp; tmp = "problist"; display_matrix_vector(probList, tmp);
 	int length = probList.size();
@@ -736,47 +736,7 @@ bool SUS::output(vector<double>probList, vector<double>sigList,int &nSimTotal) {
 bool SUS::sim_SA_fake(vector<vector<double> >&Xsa, vector<double>&Res_ylimit, int simtype) {
 	switch (simtype)
 	{
-		case SAFAIL_: {
-			if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
-				cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
-				return 0;
-			}
-			double	rate = 0.1;
-			double vthn0 = 0.175;
-			for (int i = 0; i < Res_ylimit.size(); i++) {
-				double vthn1 = vthn0 + rate*vthn0*Xsa[0][i];
-				double vthn2 = vthn0 + rate*vthn0*Xsa[1][i];
-				Res_ylimit[i] = vthn1 - vthn2;
-			}
-			break;
-		}
-		case READFAIL_: {
-			if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
-				cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
-				return 0;
-			}
-			for (int i = 0; i < Res_ylimit.size(); i++) {
-				Res_ylimit[i] = 0;
-			}
-			break;
-		}
-		case WRITEFAIL_: {
-			if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
-				cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
-				return 0;
-			}
-			for (int i = 0; i < Res_ylimit.size(); i++) {
-				Res_ylimit[i] = 0;
-			}
-			break;
-		}
-		default: {cout << "in function sim_AS_fake, wrong simulation type, error!\n"; break; };		
-	}
-	return 1;
-
-}
-/*
-	if (simtype == SAFAIL_) {
+	case SAFAIL_: {
 		if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
 			cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
 			return 0;
@@ -788,22 +748,66 @@ bool SUS::sim_SA_fake(vector<vector<double> >&Xsa, vector<double>&Res_ylimit, in
 			double vthn2 = vthn0 + rate*vthn0*Xsa[1][i];
 			Res_ylimit[i] = vthn1 - vthn2;
 		}
-		return 1;
+		break;
 	}
-	else {
-		if (simtype == READFAIL_) {
-			if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
-				cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
-				return 0;
-			}
-			for (int i = 0; i < Res_ylimit.size(); i++) {
-				Res_ylimit[i] = 0;
-			}
+	case READFAIL_: {
+		if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
+			cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
+			return 0;
 		}
+		for (int i = 0; i < Res_ylimit.size(); i++) {
+			//Res_ylimit[i] = 0;
+			Res_ylimit[i] = n(e)*REALCOR;
+			//Res_ylimit[i] = n(e) * 0;
+			//cout << Res_ylimit[i] << endl;
+		}
+		break;
 	}
+	case WRITEFAIL_: {
+		if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
+			cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
+			return 0;
+		}
+		for (int i = 0; i < Res_ylimit.size(); i++) {
+			//Res_ylimit[i] = 0;
+			Res_ylimit[i] = REALCOR2*n(e)*TWL;
+		}
+		break;
+	}
+	default: {cout << "in function sim_AS_fake, wrong simulation type, error!\n"; break; };
+	}
+	return 1;
+
+}
+/*
+if (simtype == SAFAIL_) {
+if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
+cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
+return 0;
+}
+double	rate = 0.1;
+double vthn0 = 0.175;
+for (int i = 0; i < Res_ylimit.size(); i++) {
+double vthn1 = vthn0 + rate*vthn0*Xsa[0][i];
+double vthn2 = vthn0 + rate*vthn0*Xsa[1][i];
+Res_ylimit[i] = vthn1 - vthn2;
+}
+return 1;
+}
+else {
+if (simtype == READFAIL_) {
+if (Xsa.size() != 2 || Xsa[0].size() != Res_ylimit.size()) {
+cout << "Enter function sim_SA_fake, dimensiont is wronr,error!\n";
+return 0;
+}
+for (int i = 0; i < Res_ylimit.size(); i++) {
+Res_ylimit[i] = 0;
+}
+}
+}
 }*/
 
-bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype) {
+bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo, int simtype) {
 	//  when epo==1, it will return a matrix in Y;
 	//cout<<"In simout "<<X.size()<<"\t"<<X[0].size()<<endl;
 	//system("read");
@@ -814,7 +818,7 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 		}
 		int ncells = X.size(), nSim = X[0].size();
 		vector<double> bias(nSim);
-		gen_corr(bias,simtype);
+		gen_corr(bias, simtype);
 		for (int i = 0; i < ncells / (2 * NumTrans); i++)
 		{
 			vector<vector<double> > tmp(2 * NumTrans, vector<double>(nSim));
@@ -823,7 +827,7 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 					tmp[m][n] = X[2 * NumTrans*i + m][n] + bias[n];
 				}
 			}
-			simX(tmp, Y, i,simtype);
+			simX(tmp, Y, i, simtype);
 		}
 		nSimTotal += nSim*ncells / 6;
 		return 1;
@@ -835,7 +839,7 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 		}
 		int ncells = X.size(), nSim = X[0].size();
 		vector<double> bias(nSim);
-		gen_corr(bias,simtype);
+		gen_corr(bias, simtype);
 		vector<vector<double> >Yall(ncells / (2 * NumTrans), vector<double>(nSim));
 		for (int i = 0; i < ncells / (2 * NumTrans); i++)
 		{
@@ -845,7 +849,7 @@ bool SUS::simout(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSim
 					tmp[m][n] = X[2 * NumTrans*i + m][n] + bias[n];
 				}
 			}
-			simX(tmp, Yall, i,simtype);
+			simX(tmp, Yall, i, simtype);
 		}
 		for (int i = 0; i < nSim; i++) {
 			double tmp = MYMIN;
@@ -864,63 +868,63 @@ bool SUS::simX(vector<vector<double> > &src, vector<vector<double> >&dst, int in
 	//system("read");
 	switch (simtype)
 	{
-		case SAFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			simulator Simulator;
-			int length = dst[0].size();
-			vector<double>iPG(length);
-			vector<double>V2(length);
-			vector<vector<double> >wrk(NumTrans, vector<double>(length));
-			for (int i = 0; i < NumTrans; i++) {
-				for (int j = 0; j < length; j++) {
-					wrk[i][j] = src[i][j];
-				}
-			}
-			Simulator.dcsim(wrk, iPG, V2);
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = iPG[i];
-			}
-			break;
+	case SAFAIL_: {
+		if (index < 0 || index >= dst.size()) {
+			cout << "Entering function simX. dimension is wrong,error!\n";
+			return 0;
 		}
-		case READFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
+		simulator Simulator;
+		int length = dst[0].size();
+		vector<double>iPG(length);
+		vector<double>V2(length);
+		vector<vector<double> >wrk(NumTrans, vector<double>(length));
+		for (int i = 0; i < NumTrans; i++) {
+			for (int j = 0; j < length; j++) {
+				wrk[i][j] = src[i][j];
 			}
-			int length = dst[0].size();
-			simulator Simulator;
-			vector<double>delta_V(length);
-			Simulator.readsim(src, delta_V);
-			//cout<<"in simx "<<src.size()<<"\t"<<src[0].size()<<endl;
-			
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = delta_V[i];
-			}
-			break;
 		}
-		case WRITEFAIL_: {
-			if (index < 0 || index >= dst.size()) {
-				cout << "Entering function simX. dimension is wrong,error!\n";
-				return 0;
-			}
-			int length = dst[0].size();
-			simulator Simulator;
-			vector<double>delta_t(length);
-			Simulator.writesim(src, delta_t);
-			for (int i = 0; i < length; i++) {
-				dst[index][i] = delta_t[i];
-			}
-			break;
+		Simulator.dcsim(wrk, iPG, V2);
+		for (int i = 0; i < length; i++) {
+			dst[index][i] = iPG[i];
 		}
-		default: {cout << "in function simX, Wrong SImulation type!\n"; }
+		break;
+	}
+	case READFAIL_: {
+		if (index < 0 || index >= dst.size()) {
+			cout << "Entering function simX. dimension is wrong,error!\n";
+			return 0;
+		}
+		int length = dst[0].size();
+		simulator Simulator;
+		vector<double>delta_V(length);
+		Simulator.readsim(src, delta_V);
+		//cout<<"in simx "<<src.size()<<"\t"<<src[0].size()<<endl;
+
+		for (int i = 0; i < length; i++) {
+			dst[index][i] = delta_V[i];
+		}
+		break;
+	}
+	case WRITEFAIL_: {
+		if (index < 0 || index >= dst.size()) {
+			cout << "Entering function simX. dimension is wrong,error!\n";
+			return 0;
+		}
+		int length = dst[0].size();
+		simulator Simulator;
+		vector<double>delta_t(length);
+		Simulator.writesim(src, delta_t);
+		for (int i = 0; i < length; i++) {
+			dst[index][i] = delta_t[i];
+		}
+		break;
+	}
+	default: {cout << "in function simX, Wrong SImulation type!\n"; }
 	}
 	return 1;
 }
 
-bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo,int simtype) {
+bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSimTotal, bool epo, int simtype) {
 	//  when epo==1, it will return a matrix in Y;
 	//cout<<"In simout "<<X.size()<<"\t"<<X[0].size()<<endl;
 	//system("read");
@@ -938,7 +942,7 @@ bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSi
 					tmp[m][n] = X[2 * NumTrans*i + m][n];
 				}
 			}
-			simX(tmp, Y, i,simtype);
+			simX(tmp, Y, i, simtype);
 		}
 		nSimTotal += nSim*ncells / 6;
 		return 1;
@@ -958,7 +962,7 @@ bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSi
 					tmp[m][n] = X[2 * NumTrans*i + m][n];
 				}
 			}
-			simX(tmp, Yall, i,simtype);
+			simX(tmp, Yall, i, simtype);
 		}
 		for (int i = 0; i < nSim; i++) {
 			double tmp = MYMAX;
@@ -974,50 +978,50 @@ bool SUS::simout2(vector<vector<double> >&X, vector<vector<double> >&Y, int &nSi
 
 
 
-bool SUS::MC(vector<int> &src,vector<double> &dst,int simtype,int nsim){
-	if (src.size()!=dst.size()){
-		cout<<"[Warning]:In function APA::MC,dimension is wrong!\n";
+bool SUS::MC(vector<int> &src, vector<double> &dst, int simtype, int nsim) {
+	if (src.size() != dst.size()) {
+		cout << "[Warning]:In function APA::MC,dimension is wrong!\n";
 	}
-		for (int j=0;j<src.size();j++){
-			int cur_cell=src[j];
-			int failnum=0;
-			for (int i=0;i<nsim;i++){
-				vector<vector<double> > cur_x(cur_cell*2*NumTrans,vector<double> (1));
-				for(int p=0;p<cur_x.size();p++){
-					cur_x[p][0]=n(e);
-				}
-				vector<vector<double> > wrk(cur_cell,vector<double> (1));
-				int simtimes;
-				simout2(cur_x,wrk,simtimes,1,simtype);
-				vector<vector<double> > ylim(2, vector<double>(1));
-				vector <vector<double> > Xsa(2, vector<double>(1));
-				vector<double>ylimit_V(1);
-				Xsa[0][0]=n(e);
-				Xsa[1][0]=n(e);
-				sim_SA_fake(Xsa, ylimit_V,simtype);
-				ylim[0][0] = ylimit_V[0] / t_C + u01[0];
-				ylim[1][0] = sig01[1] * n(e) + u01[1];
-				for (int p=0;p<wrk.size();p++){
-					if (isnan(wrk[p][0]) || wrk[p][0]<ylim[0][0] || wrk[p][0]>ylim[1][0]){
-						failnum+=1;
-						break;
-					}
-				}
-				cout<<"Finish "<<i<<"/"<<nsim<<" of the "<<j<<"th cell"<<endl;
+	for (int j = 0; j<src.size(); j++) {
+		int cur_cell = src[j];
+		int failnum = 0;
+		for (int i = 0; i<nsim; i++) {
+			vector<vector<double> > cur_x(cur_cell * 2 * NumTrans, vector<double>(1));
+			for (int p = 0; p<cur_x.size(); p++) {
+				cur_x[p][0] = n(e);
 			}
-			dst[j] = double(failnum) /nsim;
+			vector<vector<double> > wrk(cur_cell, vector<double>(1));
+			int simtimes;
+			simout2(cur_x, wrk, simtimes, 1, simtype);
+			vector<vector<double> > ylim(2, vector<double>(1));
+			vector <vector<double> > Xsa(2, vector<double>(1));
+			vector<double>ylimit_V(1);
+			Xsa[0][0] = n(e);
+			Xsa[1][0] = n(e);
+			sim_SA_fake(Xsa, ylimit_V, simtype);
+			ylim[0][0] = ylimit_V[0] / t_C + u01[0];
+			ylim[1][0] = sig01[1] * n(e) + u01[1];
+			for (int p = 0; p<wrk.size(); p++) {
+				if (isnan(wrk[p][0]) || wrk[p][0]<ylim[0][0] || wrk[p][0]>ylim[1][0]) {
+					failnum += 1;
+					break;
+				}
+			}
+			cout << "Finish " << i << "/" << nsim << " of the " << j << "th cell" << endl;
 		}
+		dst[j] = double(failnum) / nsim;
+	}
 	return true;
 }
 
 
 
-bool SUS::gen_corr(vector<double> &bias,int simtype){
+bool SUS::gen_corr(vector<double> &bias, int simtype) {
 	for (int i = 0; i < bias.size(); i++)
 	{
-		if (simtype==READFAIL_){bias[i]=n(e)*2.7;}
-		if (simtype==SAFAIL_){bias[i]=0;}//bias[i]=0;
-		if (simtype==WRITEFAIL_){bias[i]=n(e)*2.6;}
+		if (simtype == READFAIL_) { bias[i] = n(e)*FAKECOR; }
+		if (simtype == SAFAIL_) { bias[i] = 0; }//bias[i]=0;
+		if (simtype == WRITEFAIL_) { bias[i] = n(e)*FAKECOR2; }
 
 	}
 	return true;
